@@ -4,6 +4,9 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 const supabase = require("./config/supabase");
 const PORT = 8081;
+const uuid = require("uuid");
+const HOSTNAME_URL = process.env.HOSTNAME_URL;
+
 require("dotenv").config();
 
 app.set("view engine", "ejs");
@@ -12,7 +15,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
-  return res.render("index");
+  return res.render("index", { HOSTNAME_URL });
+});
+
+app.post("/createRoom/:roomID", async (req, res) => {
+  let roomID = req.params.roomID;
+  const { data, error } = await supabase
+    .from("unspoken_room")
+    .insert([{ roomID }])
+    .select();
+  return res.status(201).json({ message: "Room Created!" });
+});
+
+app.get("/createRoom/:roomId", (req, res) => {
+  return res.redirect("/createRoom/" + roomId);
+  return res.render("createRoom");
 });
 
 io.on("connection", (socket) => {
