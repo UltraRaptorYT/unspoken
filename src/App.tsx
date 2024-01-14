@@ -11,8 +11,8 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/:roomID" element={<Room />} />
-        <Route path="/host/:roomID" element={<Host />} />
+        <Route path="/:room_id" element={<Room />} />
+        <Route path="/host/:room_id" element={<Host />} />
         {/* 404 ERROR */}
         <Route path="/*" element={<Error />} />
       </Route>
