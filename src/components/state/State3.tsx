@@ -58,7 +58,7 @@ export default function State2({
     getOtherUserName();
   }, [question]);
 
-  async function addSessionData(userBody: string) {
+  async function addSessionData(user_name: string) {
     if (room_id) {
       const { data, error } = await supabase
         .from("unspoken_session")
@@ -71,22 +71,18 @@ export default function State2({
       let currentSession = data ? data[0] : null;
       if (currentSession) {
         console.log(currentSession);
-        let updateValue: { [key: string]: string } =
-          currentSession.session_data;
         if (user_id == currentSession.user1_id) {
-          updateValue[currentSession.user2_id] = userBody;
           const { error } = await supabase
             .from("unspoken_session")
-            .update({ session_data: updateValue })
+            .update({ user1_name: user_name })
             .eq("session_id", currentSession.session_id);
           if (error) {
             return console.log(error);
           }
         } else if (user_id == currentSession.user2_id) {
-          updateValue[currentSession.user1_id] = userBody;
           const { error } = await supabase
             .from("unspoken_session")
-            .update({ session_data: updateValue })
+            .update({ user2_name: user_name })
             .eq("session_id", currentSession.session_id);
           if (error) {
             return console.log(error);
@@ -120,6 +116,7 @@ export default function State2({
         ready={ready}
         onClick={async () => {
           checkInput();
+          setReady((prevState) => !prevState);
         }}
       ></CustomButton>
     </div>

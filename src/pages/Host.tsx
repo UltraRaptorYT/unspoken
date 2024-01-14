@@ -6,6 +6,7 @@ import { ROOM_TYPE, ReadyState, StateMappingType, QuestionType } from "@/types";
 import HostState0 from "@/components/state/host/HostState0";
 import HostState1 from "@/components/state/host/HostState1";
 import HostState2 from "@/components/state/host/HostState2";
+import HostState3 from "@/components/state/host/HostState3";
 
 type GenerateStateMapping = (readyState: ReadyState) => StateMappingType;
 
@@ -56,6 +57,13 @@ function Host() {
             room_id={room_id}
             question={question}
           ></HostState2>
+        ),
+        3: (
+          <HostState3
+            readyState={readyState}
+            room_id={room_id}
+            question={question}
+          ></HostState3>
         ),
       };
     };

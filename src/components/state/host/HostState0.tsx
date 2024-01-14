@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 
 export default function HostState0({
-  readyState,
+  // readyState,
   room_id,
 }: {
   readyState: ReadyState;
@@ -36,7 +36,7 @@ export default function HostState0({
           <Skeleton className="w-full h-full absolute top-0 left-0 rounded-md" />
         )}
       </div>
-      {JSON.stringify(readyState)}
+      {/* {JSON.stringify(readyState)} */}
     </div>
   );
 }

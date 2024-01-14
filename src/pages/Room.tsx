@@ -7,6 +7,7 @@ import { ROOM_TYPE, StateMappingType, QuestionType } from "@/types";
 import State0 from "@/components/state/State0";
 import State1 from "@/components/state/State1";
 import State2 from "@/components/state/State2";
+import State3 from "@/components/state/State3";
 
 const user_id = uuidv4();
 
@@ -63,6 +64,14 @@ function Room() {
               question={"What is your favourite thing about <PERSON>?"}
               room_id={room_id}
             ></State2>
+          ),
+          3: (
+            <State3
+              channel={channel}
+              user_id={user_id}
+              question={"What is your favourite thing about <PERSON>?"}
+              room_id={room_id}
+            ></State3>
           ),
         };
       };
