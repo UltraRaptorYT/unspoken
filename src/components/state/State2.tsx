@@ -31,21 +31,21 @@ export default function State2({
     }
   }, [ready]);
 
-  async function getOtherUserName() {
-    if (room_id) {
-      const { data, error } = await supabase
-        .from("unspoken_session")
-        .select()
-        .eq("room_id", room_id)
-        .order("created_at", { ascending: false });
-      if (error) {
-        return console.log(error);
-      }
-      let currentSession = data ? data[0] : null;
-      if (currentSession) {
-      }
-    }
-  }
+  // async function getOtherUserName() {
+  //   if (room_id) {
+  //     const { data, error } = await supabase
+  //       .from("unspoken_session")
+  //       .select()
+  //       .eq("room_id", room_id)
+  //       .order("created_at", { ascending: false });
+  //     if (error) {
+  //       return console.log(error);
+  //     }
+  //     let currentSession = data ? data[0] : null;
+  //     if (currentSession) {
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     if (question.includes("<PERSON>")) {

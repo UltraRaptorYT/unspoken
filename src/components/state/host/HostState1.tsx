@@ -2,7 +2,7 @@ import { ReadyState } from "@/types";
 
 export default function HostState1({
   readyState,
-  room_id,
+  // room_id,
   question,
 }: {
   readyState: ReadyState;
