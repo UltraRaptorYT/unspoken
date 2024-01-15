@@ -24,8 +24,11 @@ export default function State0({
   }, [ready]);
 
   return (
-    <div className="flex flex-col max-w-[500px] mx-auto h-full items-center justify-center gap-5">
-      <div className="text-lg">Click when Ready</div>
+    <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow">
+      <div className="flex flex-col items-center justify-center">
+        <div className="text-xl">Waiting for other user...</div>
+        <div className="text-lg">Click when Ready</div>
+      </div>
       <CustomButton
         ready={ready}
         onClick={async () => {

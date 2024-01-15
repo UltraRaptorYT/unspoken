@@ -1,9 +1,9 @@
 import { RealtimeChannel } from "@supabase/supabase-js";
 import CustomButton from "@/components/CustomButton";
-import { useState, useEffect, useRef } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import supabase from "@/lib/supabase";
+import ScaleableInput from "../ScalebleInput";
 
 export default function State2({
   channel,
@@ -19,7 +19,7 @@ export default function State2({
   const [ready, setReady] = useState<boolean>(false);
   let [currentQn, setCurrentQn] = useState<string>("");
   const { toast } = useToast();
-  const inputRef = useRef(null);
+  const [attributeArr, setAttributeArr] = useState<string[]>([""]);
 
   useEffect(() => {
     if (channel) {
@@ -97,25 +97,58 @@ export default function State2({
   }
 
   async function checkInput() {
-    if (inputRef.current) {
-      let inputValue = (inputRef.current as HTMLTextAreaElement).value;
-      if (inputValue) {
-        addSessionData(inputValue);
-        setReady((prevState) => !prevState);
-      } else {
-        toast({
-          title: "Please enter your name",
-          variant: "destructive",
-          duration: 1000,
-        });
-      }
+    if (attributeArr.filter((e) => e).length == 0) {
+      return toast({
+        title: "Please enter something you like about the other person",
+        variant: "destructive",
+        duration: 1000,
+      });
+    } else {
+      setAttributeArr((prevState) => {
+        let list = [...prevState];
+        list = list.filter((e) => e);
+        addSessionData(list.join(","));
+        return list;
+      });
+      setReady((prevState) => !prevState);
     }
   }
 
+  async function inputChangeHandler(key: number, value: string) {
+    setAttributeArr((prevState) => {
+      let list = [...prevState];
+      list[key] = value;
+      return list;
+    });
+  }
+
+  async function inputRemoveHandler(key: number) {
+    setAttributeArr((prevState) => {
+      let list = [...prevState];
+      list.splice(key, 1);
+      return list;
+    });
+  }
+
+  async function inputAddHandler() {
+    setAttributeArr((prevState) => {
+      let list = [...prevState];
+      list.push("");
+      return list;
+    });
+  }
+
   return (
-    <div className="flex flex-col max-w-[500px] mx-auto h-full items-center justify-center gap-5">
+    <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow py-8 grow">
       <div className="text-xl">{currentQn}</div>
-      <Textarea placeholder={currentQn} disabled={ready} />
+      <ScaleableInput
+        disabled={ready}
+        maxInput={10}
+        attributeArr={attributeArr}
+        inputChangeHandler={inputChangeHandler}
+        inputRemoveHandler={inputRemoveHandler}
+        inputAddHandler={inputAddHandler}
+      ></ScaleableInput>
       <CustomButton
         ready={ready}
         onClick={async () => {

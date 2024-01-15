@@ -21,7 +21,7 @@ export default function HostState0({
     );
   }, []);
   return (
-    <div className="min-w-[300px] w-full max-w-[300px] mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
+    <div className="min-w-[300px] w-full max-w-[500px] mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
       <div className="flex flex-col gap-3 items-center justify-center">
         <h1 className="text-5xl">unspoken.</h1>
         <h3 className="text-xl">Scan here to begin</h3>

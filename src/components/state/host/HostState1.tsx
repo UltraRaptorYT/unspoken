@@ -10,8 +10,8 @@ export default function HostState1({
   question: string;
 }) {
   return (
-    <div className="min-w-[300px] w-full max-w-[300px] mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
-      <h1 className="text-3xl">{question}</h1>
+    <div className="min-w-[300px] w-full max-w-[500px] mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
+      <h1 className="text-3xl text-center">{question}</h1>
       {/* HostState 1 {JSON.stringify(readyState)} */}
     </div>
   );

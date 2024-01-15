@@ -81,7 +81,7 @@ export default function State1({
   }
 
   return (
-    <div className="flex flex-col max-w-[500px] mx-auto h-full items-center justify-center gap-5">
+    <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow">
       <div className="text-xl">{question}</div>
       <Input
         type="text"

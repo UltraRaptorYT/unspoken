@@ -6,11 +6,13 @@ import { Toaster } from "@/components/ui/toaster";
 function Layout() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <main className="min-h-[100dvh] bg-white dark:bg-slate-900 h-[100dvh] flex flex-col dark:text-white text-black">
-        <Outlet />
-        <Toaster />
+      <main className="min-h-[100dvh] bg-slate-100 dark:bg-slate-900 flex dark:text-white text-black w-full">
+        <div className="grow w-full">
+          <Outlet />
+          <Toaster />
+        </div>
       </main>
-      <div className="absolute bottom-3 left-3">
+      <div className="fixed bottom-3 left-3">
         <ThemeToggle></ThemeToggle>
       </div>
     </ThemeProvider>
