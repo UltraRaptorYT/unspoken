@@ -1,7 +1,5 @@
 import { RealtimeChannel } from "@supabase/supabase-js";
-import CustomButton from "@/components/CustomButton";
 import { useState, useEffect, useRef } from "react";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import supabase from "@/lib/supabase";
 
@@ -88,22 +86,6 @@ export default function State2({
             return console.log(error);
           }
         }
-      }
-    }
-  }
-
-  async function checkInput() {
-    if (inputRef.current) {
-      let inputValue = (inputRef.current as HTMLTextAreaElement).value;
-      if (inputValue) {
-        addSessionData(inputValue);
-        setReady((prevState) => !prevState);
-      } else {
-        toast({
-          title: "Please enter your name",
-          variant: "destructive",
-          duration: 1000,
-        });
       }
     }
   }
