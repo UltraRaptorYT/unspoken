@@ -227,25 +227,27 @@ export default function HostState3({
   const [QRImage, SetQRImage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
-    console.log(imgURL);
-    SetQRImage(imgURL);
-    setDisplayText(
-      <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
-        <span>Once again, thank you for participating!</span>
-        <span>We hope to see you soon!</span>
-        <span>Get your Photo here!</span>
-        <div className="w-[150px] aspect-square relative">
-          <img
-            src={QRImage}
-            onLoad={() => setLoading(false)}
-            className="w-full h-full rounded-md"
-          />
-          {loading && (
-            <Skeleton className="w-full h-full absolute top-0 left-0 rounded-md" />
-          )}
-        </div>
-      </h1>
-    );
+    if (imgURL) {
+      console.log(imgURL);
+      SetQRImage(imgURL);
+      setDisplayText(
+        <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
+          <span>Once again, thank you for participating!</span>
+          <span>We hope to see you soon!</span>
+          <span>Get your Photo here!</span>
+          <div className="w-[150px] aspect-square relative">
+            <img
+              src={QRImage}
+              onLoad={() => setLoading(false)}
+              className="w-full h-full rounded-md"
+            />
+            {loading && (
+              <Skeleton className="w-full h-full absolute top-0 left-0 rounded-md" />
+            )}
+          </div>
+        </h1>
+      );
+    }
   }, [imgURL]);
 
   return (
