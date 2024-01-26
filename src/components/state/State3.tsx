@@ -110,15 +110,7 @@ export default function State2({
 
   return (
     <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow">
-      <div className="text-xl">{currentQn}</div>
-      <Textarea placeholder={currentQn} disabled={ready} />
-      <CustomButton
-        ready={ready}
-        onClick={async () => {
-          checkInput();
-          setReady((prevState) => !prevState);
-        }}
-      ></CustomButton>
+      <div className="text-xl text-center">{currentQn}</div>
     </div>
   );
 }

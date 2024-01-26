@@ -1,14 +1,17 @@
 import { ReadyState } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function HostState0({
   // readyState,
   room_id,
+  clearRoom,
 }: {
   readyState: ReadyState;
   room_id: string | undefined;
   question: string;
+  clearRoom: () => void;
 }) {
   const [QRImage, SetQRImage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,6 +23,7 @@ export default function HostState0({
       }/${room_id}`
     );
   }, []);
+
   return (
     <div className="min-w-[300px] w-full max-w-[500px] mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
       <div className="flex flex-col gap-3 items-center justify-center">
@@ -36,6 +40,9 @@ export default function HostState0({
           <Skeleton className="w-full h-full absolute top-0 left-0 rounded-md" />
         )}
       </div>
+      <Button onClick={() => clearRoom()} variant={"secondary"}>
+        RESET ROOM
+      </Button>
       {/* {JSON.stringify(readyState)} */}
     </div>
   );

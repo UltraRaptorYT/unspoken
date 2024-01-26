@@ -106,7 +106,7 @@ export default function State2({
     } else {
       setAttributeArr((prevState) => {
         let list = [...prevState];
-        list = list.filter((e) => e);
+        list = list.filter((val,idx) => val && list.indexOf(val) == idx);
         addSessionData(list.join(","));
         return list;
       });
@@ -143,7 +143,7 @@ export default function State2({
       <div className="text-xl">{currentQn}</div>
       <ScaleableInput
         disabled={ready}
-        maxInput={10}
+        maxInput={7}
         attributeArr={attributeArr}
         inputChangeHandler={inputChangeHandler}
         inputRemoveHandler={inputRemoveHandler}

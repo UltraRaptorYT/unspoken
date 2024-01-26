@@ -69,7 +69,7 @@ function Room() {
             <State3
               channel={channel}
               user_id={user_id}
-              question={"What is your favourite thing about <PERSON>?"}
+              question={"Proceed to the front and POSE!"}
               room_id={room_id}
             ></State3>
           ),
@@ -90,7 +90,7 @@ function Room() {
     if (error) {
       return console.error("Error");
     }
-    if (data && data.length >= 2) {
+    if (data && data.length > 2) {
       return navigate("/");
     }
   }
@@ -107,7 +107,7 @@ function Room() {
     if (data?.length == 0) {
       return navigate("/");
     }
-    checkRoomState();
+    await checkRoomState();
     setCurrentState((data as ROOM_TYPE[])[0]?.state);
     return console.log("ROOM OKAY");
   }
@@ -169,21 +169,36 @@ function Room() {
           console.log("join", key, newPresences);
           await addUser();
           await addUserRoom(key, room_id);
+          await checkRoomState();
         })
         .on("presence", { event: "leave" }, async ({ key, leftPresences }) => {
           console.log("leave", key, leftPresences);
           await removeUserRoom(key, room_id);
+          await checkRoomState();
           setCurrentState(0);
         });
 
-      channel.on(
-        "broadcast",
-        { event: "stateChange" },
-        ({ payload }: { payload: { state: number } }) => {
-          console.log(payload);
-          setCurrentState(payload.state);
-        }
-      );
+      channel
+        .on(
+          "broadcast",
+          { event: "stateChange" },
+          ({ payload }: { payload: { state: number } }) => {
+            console.log(payload);
+            setCurrentState(payload.state);
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "DELETE",
+            schema: "public",
+            table: "unspoken_user_room",
+          },
+          (payload) => {
+            console.log(payload);
+            navigate("/");
+          }
+        );
 
       channel.subscribe(async (status) => {
         if (status !== "SUBSCRIBED") {

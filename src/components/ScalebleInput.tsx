@@ -38,6 +38,7 @@ export default function ScaleableInput({
                 variant={"destructive"}
                 size={"sm"}
                 onClick={() => inputRemoveHandler(key)}
+                disabled={disabled}
               >
                 -
               </Button>

@@ -32,6 +32,16 @@ function Host() {
     setQuestion((currentQn as QuestionType).question);
   }
 
+  async function clearRoom() {
+    const { error } = await supabase
+      .from("unspoken_user_room")
+      .delete()
+      .eq("room_id", room_id);
+    if (error) {
+      return console.log(error);
+    }
+  }
+
   useEffect(() => {
     const generateStateMapping: GenerateStateMapping = (
       readyState: ReadyState
@@ -42,20 +52,21 @@ function Host() {
             readyState={readyState}
             room_id={room_id}
             question={question}
+            clearRoom={clearRoom}
           ></HostState0>
         ),
         1: (
           <HostState1
             readyState={readyState}
             room_id={room_id}
-            question={question}
+            question={"What is your name?"}
           ></HostState1>
         ),
         2: (
           <HostState2
             readyState={readyState}
             room_id={room_id}
-            question={question}
+            question={"What is your favourite thing about <PERSON>?"}
           ></HostState2>
         ),
         3: (
@@ -199,6 +210,25 @@ function Host() {
     }
   }
 
+  async function getSessionData() {
+    let { data, error } = await supabase
+      .from("unspoken_session")
+      .select()
+      .eq("room_id", room_id)
+      .eq("user1_id", Object.keys(readyState)[0])
+      .eq("user2_id", Object.keys(readyState)[1])
+      .order("created_at", { ascending: false });
+    if (error) {
+      return console.log(error);
+    }
+
+    if (!data || data?.length == 0) {
+      return;
+    } else {
+      return data[0];
+    }
+  }
+
   useEffect(() => {
     async function handleStateChange() {
       await updateRoomState();
@@ -206,6 +236,10 @@ function Host() {
         addSession();
       }
       await getQuestion();
+      if (currentState === 3) {
+        let sessionData = await getSessionData();
+        setQuestion(JSON.stringify(sessionData));
+      }
       await channel?.send({
         type: "broadcast",
         event: "stateChange",
@@ -215,6 +249,47 @@ function Host() {
 
     handleStateChange();
   }, [currentState]);
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [permissionGranted, setPermissionGranted] = useState(false);
+
+  useEffect(() => {
+    if (permissionGranted) {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    }
+  }, [permissionGranted]);
+
+  useEffect(() => {
+    const requestCameraPermission = async () => {
+      try {
+        const cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+        setPermissionGranted(true);
+        setStream(cameraStream);
+      } catch (error) {
+        // If the getUserMedia call fails, handle the error
+        console.error("Error accessing camera:", error);
+        // You may want to add more error handling here or display a message to the user
+      }
+    };
+    if (
+      "mediaDevices" in navigator &&
+      "getUserMedia" in navigator.mediaDevices
+    ) {
+      // Request camera permission
+      requestCameraPermission();
+    } else {
+      console.error("getUserMedia is not supported in this browser");
+      // Handle the case where getUserMedia is not supported in the browser
+    }
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, []);
 
   return dynamicChildren;
 }
