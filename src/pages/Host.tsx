@@ -22,17 +22,17 @@ function Host() {
   );
   const { toast } = useToast();
 
-  async function getQuestion() {
-    const { data, error } = await supabase
-      .from("unspoken_state")
-      .select()
-      .eq("id", currentState);
-    if (error) {
-      return console.log(error);
-    }
-    let currentQn = data[0];
-    setQuestion((currentQn as QuestionType).question);
-  }
+  // async function getQuestion() {
+  //   const { data, error } = await supabase
+  //     .from("unspoken_state")
+  //     .select()
+  //     .eq("id", currentState);
+  //   if (error) {
+  //     return console.log(error);
+  //   }
+  //   let currentQn = data[0];
+  //   setQuestion((currentQn as QuestionType).question);
+  // }
 
   async function clearRoom() {
     const { error } = await supabase
