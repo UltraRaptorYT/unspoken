@@ -4,6 +4,9 @@ import ReactPlayer from "react-player";
 import Silhouette from "@/components/Silhouette";
 import { Skeleton } from "@/components/ui/skeleton";
 import Webcam from "react-webcam";
+import supabase from "@/lib/supabase";
+import { RealtimeChannel } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
 
 type SessionDataType = {
   session_id: number;
@@ -19,15 +22,20 @@ type SessionDataType = {
 const videoConstraints = {
   width: 1920,
   height: 1080,
-  facingMode: "user",
 };
 
 export default function HostState3({
   question,
+  room_id,
+  readyState,
+  channel,
+  clearRoom,
 }: {
   readyState: ReadyState;
   room_id: string | undefined;
   question: string;
+  channel: RealtimeChannel | undefined;
+  clearRoom: () => void;
 }) {
   let [user1, setUser1] = useState<string>("");
   let [user2, setUser2] = useState<string>("");
@@ -55,21 +63,52 @@ export default function HostState3({
 
   const initialSessionData = useMemo(() => {
     try {
-      return JSON.parse(question);
+      console.log(question);
+      if (!question) {
+        return null; // or provide a default value
+      }
+      if (typeof question == "string") {
+        return JSON.parse(question);
+      }
+      return question;
     } catch (error) {
       console.error("Error parsing question:", error);
       return null;
     }
   }, [question]);
 
+  async function getSessionData() {
+    let { data, error } = await supabase
+      .from("unspoken_session")
+      .select()
+      .eq("room_id", room_id)
+      .eq("user1_id", Object.keys(readyState)[0])
+      .eq("user2_id", Object.keys(readyState)[1])
+      .order("created_at", { ascending: false });
+    if (error) {
+      return console.log(error);
+    }
+
+    if (!data || data?.length == 0) {
+      return;
+    } else {
+      setSessionData(data[0]);
+      return data[0];
+    }
+  }
+
   useEffect(() => {
-    setSessionData(initialSessionData);
+    if (initialSessionData !== null) {
+      setSessionData(initialSessionData);
+    }
   }, [initialSessionData]);
 
   useEffect(() => {
     if (sessionData) {
       setUser1(sessionData.user1_name);
       setUser2(sessionData.user2_name);
+    } else {
+      getSessionData();
     }
   }, [sessionData]);
 
@@ -193,7 +232,7 @@ export default function HostState3({
     textMapString[textState].text
   );
   let [isPlay, setIsPlay] = useState<boolean>(false);
-  // let [isPlay2, setIsPlay2] = useState<boolean>(false);
+  let [isPlay2, setIsPlay2] = useState<boolean>(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -224,31 +263,60 @@ export default function HostState3({
   useEffect(() => {
     console.log(isPlay ? "PLAYING" : "NOPE");
   }, [isPlay]);
-  const [QRImage, SetQRImage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     if (imgURL) {
-      console.log(imgURL);
-      SetQRImage(imgURL);
       setDisplayText(
-        <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
+        <h1 className="text-3xl text-center flex flex-col gap-4 justify-center">
           <span>Once again, thank you for participating!</span>
           <span>We hope to see you soon!</span>
-          <span>Get your Photo here!</span>
-          <div className="w-[150px] aspect-square relative">
+          <div className="w-[500px] aspect-video relative mx-auto">
             <img
-              src={QRImage}
+              src={imgURL}
               onLoad={() => setLoading(false)}
-              className="w-full h-full rounded-md"
+              className="w-full h-full rounded-md object-cover"
             />
             {loading && (
               <Skeleton className="w-full h-full absolute top-0 left-0 rounded-md" />
             )}
           </div>
+          <Button variant={"secondary"} onClick={() => clearRoom()} className="w-fit mx-auto">
+            Reset Room
+          </Button>
         </h1>
       );
     }
   }, [imgURL]);
+
+  async function uploadImage(file: Blob) {
+    let filePath = `${String(new Date().getTime())}_${room_id}.jpeg`;
+    const { data, error } = await supabase.storage
+      .from("unspoken_image")
+      .upload(filePath, file);
+
+    if (error) {
+      return console.log(error);
+    }
+    console.log(data.path);
+    channel?.send({
+      type: "broadcast",
+      event: "getImage",
+      payload: {
+        imgURL:
+          import.meta.env.VITE_SUPABASE_URL +
+          "/storage/v1/object/public/unspoken_image/" +
+          data.path,
+      },
+    });
+    setImgURL(
+      import.meta.env.VITE_SUPABASE_URL +
+        "/storage/v1/object/public/unspoken_image/" +
+        data.path
+    );
+    setIsPlay2(true);
+    setLoading(false);
+  }
 
   return (
     <div className="min-w-[300px] w-full max-w-[1200px] mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
@@ -264,11 +332,10 @@ export default function HostState3({
                 if (imageSrc) {
                   fetch(imageSrc)
                     .then((res) => res.blob())
-                    .then(URL.createObjectURL)
-                    .then(setImgURL);
+                    .then(uploadImage);
                 }
               }
-            }, 1000);
+            }, 2500);
           }}
           config={{
             file: {
@@ -278,7 +345,7 @@ export default function HostState3({
           playing={isPlay}
         />
 
-        {/* <ReactPlayer
+        <ReactPlayer
           url={"/audio2.mp3"}
           onEnded={() => setIsPlay2(false)}
           config={{
@@ -287,17 +354,19 @@ export default function HostState3({
             },
           }}
           playing={isPlay2}
-        /> */}
+        />
       </div>
-      <Webcam
-        audio={false}
-        width={1920}
-        height={1080}
-        ref={webcamRef}
-        screenshotFormat="image/jpeg"
-        videoConstraints={videoConstraints}
-        className="absolute bottom-[100%]"
-      />
+      {!imgURL && (
+        <Webcam
+          audio={false}
+          width={1920}
+          height={1080}
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+          videoConstraints={videoConstraints}
+          className="absolute top-[0%] aspect-video w-full opacity-0 collapse h-full"
+        />
+      )}
     </div>
   );
 }

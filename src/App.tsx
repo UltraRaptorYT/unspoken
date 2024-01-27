@@ -5,6 +5,7 @@ import Error from "./pages/404";
 import Layout from "./pages/Layout";
 import Room from "./pages/Room";
 import Host from "./pages/Host";
+import Image from "./pages/Image";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/:room_id" element={<Room />} />
         <Route path="/host/:room_id" element={<Host />} />
+        <Route path="/image/:image_url" element={<Image />} />
         {/* 404 ERROR */}
         <Route path="/*" element={<Error />} />
       </Route>

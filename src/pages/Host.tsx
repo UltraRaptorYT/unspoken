@@ -7,6 +7,7 @@ import HostState0 from "@/components/state/host/HostState0";
 import HostState1 from "@/components/state/host/HostState1";
 import HostState2 from "@/components/state/host/HostState2";
 import HostState3 from "@/components/state/host/HostState3";
+import { useToast } from "@/components/ui/use-toast";
 
 type GenerateStateMapping = (readyState: ReadyState) => StateMappingType;
 
@@ -19,6 +20,7 @@ function Host() {
   const [dynamicChildren, setDynamicChildren] = useState<ReactNode | null>(
     null
   );
+  const { toast } = useToast();
 
   async function getQuestion() {
     const { data, error } = await supabase
@@ -40,6 +42,11 @@ function Host() {
     if (error) {
       return console.log(error);
     }
+    setCurrentState(0);
+    toast({
+      title: "Room has been reset",
+      duration: 1000,
+    });
   }
 
   useEffect(() => {
@@ -66,7 +73,7 @@ function Host() {
           <HostState2
             readyState={readyState}
             room_id={room_id}
-            question={"What is your favourite thing about <PERSON>?"}
+            question={"What is your favourite thing(s) about <PERSON>?"}
           ></HostState2>
         ),
         3: (
@@ -74,6 +81,8 @@ function Host() {
             readyState={readyState}
             room_id={room_id}
             question={question}
+            channel={channel}
+            clearRoom={clearRoom}
           ></HostState3>
         ),
       };
@@ -81,6 +90,7 @@ function Host() {
     const updatedChildren = generateStateMapping(readyState);
     setDynamicChildren(updatedChildren[currentState]);
   }, [readyState]);
+
 
   async function ensureRoomCreated() {
     const { error } = await supabase
@@ -191,7 +201,12 @@ function Host() {
             Object.keys(readyState).map((state) => [state, false])
           )
         );
-        setCurrentState((prevState) => prevState + 1);
+        setCurrentState((prevState) => {
+          if (prevState + 1 == 3) {
+            getSessionData();
+          }
+          return prevState + 1;
+        });
       }
     }
 
@@ -225,20 +240,21 @@ function Host() {
     if (!data || data?.length == 0) {
       return;
     } else {
+      setQuestion(JSON.stringify(data[0]));
       return data[0];
     }
   }
 
   useEffect(() => {
     async function handleStateChange() {
+      console.log(currentState);
       await updateRoomState();
       if (currentState === 1) {
         addSession();
       }
-      await getQuestion();
+      // await getQuestion();
       if (currentState === 3) {
-        let sessionData = await getSessionData();
-        setQuestion(JSON.stringify(sessionData));
+        await getSessionData();
       }
       await channel?.send({
         type: "broadcast",
@@ -249,46 +265,27 @@ function Host() {
 
     handleStateChange();
   }, [currentState]);
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [permissionGranted, setPermissionGranted] = useState(false);
 
   useEffect(() => {
-    if (permissionGranted) {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    }
-  }, [permissionGranted]);
+    // Request video stream permission
+    navigator.mediaDevices
+      .getUserMedia({ audio: false, video: true })
+      .then(function (stream) {
+        // Access the video track
+        const videoTrack = stream.getVideoTracks()[0];
 
-  useEffect(() => {
-    const requestCameraPermission = async () => {
-      try {
-        const cameraStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        setPermissionGranted(true);
-        setStream(cameraStream);
-      } catch (error) {
-        // If the getUserMedia call fails, handle the error
-        console.error("Error accessing camera:", error);
-        // You may want to add more error handling here or display a message to the user
-      }
-    };
-    if (
-      "mediaDevices" in navigator &&
-      "getUserMedia" in navigator.mediaDevices
-    ) {
-      // Request camera permission
-      requestCameraPermission();
-    } else {
-      console.error("getUserMedia is not supported in this browser");
-      // Handle the case where getUserMedia is not supported in the browser
-    }
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    };
+        // Check if the video track is available
+        if (videoTrack) {
+          // Stop the video track
+          videoTrack.stop();
+        }
+
+        // You can also stop the entire stream if needed
+        // stream.getTracks().forEach(track => track.stop());
+      })
+      .catch(function (error) {
+        console.error("Error accessing video stream:", error);
+      });
   }, []);
 
   return dynamicChildren;

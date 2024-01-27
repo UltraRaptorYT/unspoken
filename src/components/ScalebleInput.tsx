@@ -27,7 +27,7 @@ export default function ScaleableInput({
             <Input
               key={"input" + key}
               defaultValue={value}
-              placeholder="Enter favourite thing"
+              placeholder="Enter favourite thing here"
               disabled={disabled}
               onChange={(e) => {
                 inputChangeHandler(key, e.target.value);

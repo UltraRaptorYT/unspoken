@@ -8,6 +8,7 @@ import State0 from "@/components/state/State0";
 import State1 from "@/components/state/State1";
 import State2 from "@/components/state/State2";
 import State3 from "@/components/state/State3";
+import { Button } from "@/components/ui/button";
 
 const user_id = uuidv4();
 
@@ -61,7 +62,7 @@ function Room() {
             <State2
               channel={channel}
               user_id={user_id}
-              question={"What is your favourite thing about <PERSON>?"}
+              question={"What is your favourite thing(s) about <PERSON>?"}
               room_id={room_id}
             ></State2>
           ),
@@ -178,6 +179,21 @@ function Room() {
           setCurrentState(0);
         });
 
+      async function downloadImage(imgURL: string) {
+        const link = document.createElement("a");
+        link.setAttribute("target", "_blank");
+        link.download = imgURL.substring(
+          imgURL.lastIndexOf("/") + 1,
+          imgURL.length
+        );
+        let data = await fetch(imgURL);
+        let blob = await data.blob();
+        link.href = URL.createObjectURL(blob);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
       channel
         .on(
           "broadcast",
@@ -185,6 +201,24 @@ function Room() {
           ({ payload }: { payload: { state: number } }) => {
             console.log(payload);
             setCurrentState(payload.state);
+          }
+        )
+        .on(
+          "broadcast",
+          { event: "getImage" },
+          ({ payload }: { payload: { imgURL: string } }) => {
+            console.log(payload);
+            setDynamicChildren(
+              <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow">
+                <div className="text-xl text-center">Download Image here!</div>
+                <Button
+                  variant={"secondary"}
+                  onClick={() => downloadImage(payload.imgURL)}
+                >
+                  Download here
+                </Button>
+              </div>
+            );
           }
         )
         .on(
