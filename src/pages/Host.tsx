@@ -2,7 +2,7 @@ import { useState, useEffect, ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import supabase from "@/lib/supabase";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { ROOM_TYPE, ReadyState, StateMappingType, QuestionType } from "@/types";
+import { ROOM_TYPE, ReadyState, StateMappingType } from "@/types";
 import HostState0 from "@/components/state/host/HostState0";
 import HostState1 from "@/components/state/host/HostState1";
 import HostState2 from "@/components/state/host/HostState2";
@@ -90,7 +90,6 @@ function Host() {
     const updatedChildren = generateStateMapping(readyState);
     setDynamicChildren(updatedChildren[currentState]);
   }, [readyState]);
-
 
   async function ensureRoomCreated() {
     const { error } = await supabase
