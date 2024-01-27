@@ -266,21 +266,13 @@ function Host() {
   }, [currentState]);
 
   useEffect(() => {
-    // Request video stream permission
     navigator.mediaDevices
       .getUserMedia({ audio: false, video: true })
       .then(function (stream) {
-        // Access the video track
         const videoTrack = stream.getVideoTracks()[0];
-
-        // Check if the video track is available
         if (videoTrack) {
-          // Stop the video track
           videoTrack.stop();
         }
-
-        // You can also stop the entire stream if needed
-        // stream.getTracks().forEach(track => track.stop());
       })
       .catch(function (error) {
         console.error("Error accessing video stream:", error);
