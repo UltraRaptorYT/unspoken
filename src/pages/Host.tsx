@@ -280,7 +280,9 @@ function Host() {
   }, []);
 
   useEffect(() => {
-    getSessionData();
+    if (currentState == 3) {
+      getSessionData();
+    }
   }, [dynamicChildren]);
 
   return dynamicChildren;
