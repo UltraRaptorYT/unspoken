@@ -279,6 +279,10 @@ function Host() {
       });
   }, []);
 
+  useEffect(() => {
+    getSessionData();
+  }, [dynamicChildren]);
+
   return dynamicChildren;
 }
 
