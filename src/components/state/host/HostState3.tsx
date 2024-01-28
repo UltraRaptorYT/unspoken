@@ -123,7 +123,7 @@ export default function HostState3({
     },
     {
       text: (
-        <div className="flex gap-6 items-center grow">
+        <div className="flex gap-4 items-center grow">
           <Silhouette name={user1}></Silhouette>
           <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
             <span>It's time for a photo!</span>
@@ -137,7 +137,7 @@ export default function HostState3({
     },
     {
       text: (
-        <div className="flex gap-7 items-center grow">
+        <div className="flex gap-4 items-center grow">
           <Silhouette name={user1}></Silhouette>
           <h1 className="text-5xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
             3
@@ -149,7 +149,7 @@ export default function HostState3({
     },
     {
       text: (
-        <div className="flex gap-7 items-center grow">
+        <div className="flex gap-4 items-center grow">
           <Silhouette name={user1}></Silhouette>
           <h1 className="text-5xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
             2
@@ -161,7 +161,7 @@ export default function HostState3({
     },
     {
       text: (
-        <div className="flex gap-7 items-center grow">
+        <div className="flex gap-4 items-center grow">
           <Silhouette name={user1}></Silhouette>
           <h1 className="text-5xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
             1
@@ -173,12 +173,12 @@ export default function HostState3({
     },
     {
       text: (
-        <div className="flex gap-7 items-center grow">
-          <div className="w-[250px] h-full pt-[85px] flex-col flex relative">
+        <div className="flex gap-4 items-center grow">
+          <div className="w-[250px] h-full pt-[300px] flex-col flex relative">
             <h1 className="text-3xl font-semibold w-full text-center">
               {user1}
             </h1>
-            <div className="absolute top-[calc(85px+125px)] w-full h-[calc(100%-85px-125px)] left-0 right-0 text-xl">
+            <div className="absolute top-[calc(300px+125px)] w-full h-[calc(100%-300px-125px)] left-0 right-0 text-xl">
               {sessionData?.session_data[sessionData.user1_id]
                 .split(",")
                 .map((val, idx) => {
@@ -198,11 +198,11 @@ export default function HostState3({
             </div>
           </div>
           <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]"></h1>
-          <div className="w-[250px] h-full pt-[85px] flex-col flex relative">
+          <div className="w-[250px] h-full pt-[300px] flex-col flex relative">
             <h1 className="text-3xl font-semibold w-full text-center">
               {user2}
             </h1>
-            <div className="absolute top-[calc(85px+125px)] w-full h-[calc(100%-85px-125px)] left-0 right-0 text-xl">
+            <div className="absolute top-[calc(300px+125px)] w-full h-[calc(100%-300px-125px)] left-0 right-0 text-xl">
               {sessionData?.session_data[sessionData.user2_id]
                 .split(",")
                 .map((val, idx) => {

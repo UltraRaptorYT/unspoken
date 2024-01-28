@@ -3,7 +3,7 @@ import { useTheme } from "./theme-provider";
 export default function Silhouette({ name }: { name: string }) {
   const { theme } = useTheme();
   return (
-    <div className="w-[250px] h-[400px] flex justify-center items-center self-end relative">
+    <div className="w-[250px] h-[275px] flex justify-center items-center self-end relative">
       <div
         className="absolute top-0 bottom-0 left-0 right-0 opacity-80"
         style={{
