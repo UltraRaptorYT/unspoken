@@ -237,9 +237,15 @@ function Host() {
     }
 
     if (!data || data?.length == 0) {
-      return;
+      return console.log("ERROR IDK Y");
     } else {
+      console.log("SESSION DATA RECEIVED", JSON.stringify(data[0]));
       setQuestion(JSON.stringify(data[0]));
+      await channel?.send({
+        type: "broadcast",
+        event: "stateChange",
+        payload: { state: currentState },
+      });
       return data[0];
     }
   }
@@ -254,12 +260,13 @@ function Host() {
       // await getQuestion();
       if (currentState === 3) {
         await getSessionData();
+      } else {
+        await channel?.send({
+          type: "broadcast",
+          event: "stateChange",
+          payload: { state: currentState },
+        });
       }
-      await channel?.send({
-        type: "broadcast",
-        event: "stateChange",
-        payload: { state: currentState },
-      });
     }
 
     handleStateChange();
