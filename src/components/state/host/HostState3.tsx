@@ -27,7 +27,7 @@ const videoConstraints = {
 export default function HostState3({
   question,
   room_id,
-  readyState,
+  // readyState,
   channel,
   clearRoom,
 }: {
@@ -77,25 +77,25 @@ export default function HostState3({
     }
   }, [question]);
 
-  async function getSessionData() {
-    let { data, error } = await supabase
-      .from("unspoken_session")
-      .select()
-      .eq("room_id", room_id)
-      .eq("user1_id", Object.keys(readyState)[0])
-      .eq("user2_id", Object.keys(readyState)[1])
-      .order("created_at", { ascending: false });
-    if (error) {
-      return console.log(error);
-    }
+  // async function getSessionData() {
+  //   let { data, error } = await supabase
+  //     .from("unspoken_session")
+  //     .select()
+  //     .eq("room_id", room_id)
+  //     .eq("user1_id", Object.keys(readyState)[0])
+  //     .eq("user2_id", Object.keys(readyState)[1])
+  //     .order("created_at", { ascending: false });
+  //   if (error) {
+  //     return console.log(error);
+  //   }
 
-    if (!data || data?.length == 0) {
-      return;
-    } else {
-      setSessionData(data[0]);
-      return data[0];
-    }
-  }
+  //   if (!data || data?.length == 0) {
+  //     return;
+  //   } else {
+  //     setSessionData(data[0]);
+  //     return data[0];
+  //   }
+  // }
 
   useEffect(() => {
     if (initialSessionData !== null) {
@@ -107,8 +107,6 @@ export default function HostState3({
     if (sessionData) {
       setUser1(sessionData.user1_name);
       setUser2(sessionData.user2_name);
-    } else {
-      getSessionData();
     }
   }, [sessionData]);
 

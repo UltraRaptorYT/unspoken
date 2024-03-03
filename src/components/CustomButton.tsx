@@ -11,7 +11,7 @@ export default function CustomButton({ onClick, ready }: CustomButtonProps) {
       onClick={() => {
         onClick();
       }}
-    >
+    > 
       {ready ? "Not Ready" : "Ready"}
     </Button>
   );

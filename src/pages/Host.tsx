@@ -263,6 +263,9 @@ function Host() {
     }
 
     handleStateChange();
+    if (currentState === 3) {
+      getSessionData();
+    }
   }, [currentState]);
 
   useEffect(() => {
