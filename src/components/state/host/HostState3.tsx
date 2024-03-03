@@ -311,29 +311,29 @@ export default function HostState3({
   }, [isPlay]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // useEffect(() => {
-  //   if (imgURL) {
-  //     setDisplayText(
-  //       <h1 className="text-3xl text-center flex flex-col gap-4 justify-center">
-  //         <span>Once again, thank you for participating!</span>
-  //         <span>We hope to see you soon!</span>
-  //         <div className="w-[500px] aspect-video relative mx-auto">
-  //           <img
-  //             src={imgURL}
-  //             onLoad={() => setLoading(false)}
-  //             className="w-full h-full rounded-md object-cover"
-  //           />
-  //           {loading && (
-  //             <Skeleton className="w-full h-full absolute top-0 left-0 rounded-md" />
-  //           )}
-  //         </div>
-  //         <Button variant={"secondary"} onClick={() => clearRoom()} className="w-fit mx-auto">
-  //           Reset Room
-  //         </Button>
-  //       </h1>
-  //     );
-  //   }
-  // }, [imgURL]);
+  useEffect(() => {
+    if (imgURL) {
+      setDisplayText(
+        <h1 className="text-3xl text-center flex flex-col gap-4 justify-center">
+          <span>Once again, thank you for participating!</span>
+          <span>We hope to see you soon!</span>
+          <div className="w-[500px] aspect-video relative mx-auto">
+            <img
+              src={imgURL}
+              onLoad={() => setLoading(false)}
+              className="w-full h-full rounded-md object-cover"
+            />
+            {loading && (
+              <Skeleton className="w-full h-full absolute top-0 left-0 rounded-md" />
+            )}
+          </div>
+          <Button variant={"secondary"} onClick={() => clearRoom()} className="w-fit mx-auto">
+            Reset Room
+          </Button>
+        </h1>
+      );
+    }
+  }, [imgURL]);
 
   async function uploadImage(file: Blob) {
     let filePath = `${String(new Date().getTime())}_${room_id}.jpeg`;
