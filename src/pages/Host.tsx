@@ -50,6 +50,7 @@ function Host() {
   }
 
   useEffect(() => {
+    console.log("IDK", currentState);
     const generateStateMapping: GenerateStateMapping = (
       readyState: ReadyState
     ) => {
@@ -239,8 +240,20 @@ function Host() {
     if (!data || data?.length == 0) {
       return console.log("ERROR IDK Y");
     } else {
-      console.log("SESSION DATA RECEIVED", JSON.stringify(data[0]));
-      setQuestion(JSON.stringify(data[0]));
+      // console.log(
+      //   currentState,
+      //   "SESSION DATA RECEIVED",
+      //   JSON.stringify(data[0])
+      // );
+      setDynamicChildren(
+        <HostState3
+          readyState={readyState}
+          room_id={room_id}
+          question={JSON.stringify(data[0])}
+          channel={channel}
+          clearRoom={clearRoom}
+        ></HostState3>
+      );
       await channel?.send({
         type: "broadcast",
         event: "stateChange",
@@ -259,9 +272,9 @@ function Host() {
       }
       // await getQuestion();
       if (currentState === 3) {
-        await getSessionData();
+        return await getSessionData();
       } else {
-        await channel?.send({
+        return await channel?.send({
           type: "broadcast",
           event: "stateChange",
           payload: { state: currentState },

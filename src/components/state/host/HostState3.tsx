@@ -171,55 +171,103 @@ export default function HostState3({
     },
     {
       text: (
-        <div className="flex gap-4 items-center grow">
-          <div className="w-[250px] h-full pt-[300px] flex-col flex relative">
-            <h1 className="text-3xl font-semibold w-full text-center">
-              {user1}
-            </h1>
-            <div className="absolute top-[calc(300px+125px)] w-full h-[calc(100%-300px-125px)] left-0 right-0 text-xl">
-              {sessionData?.session_data[sessionData.user1_id]
-                .split(",")
-                .map((val, idx) => {
-                  return (
-                    <p
-                      className="absolute -translate-x-1/2 -translate-y-1/2 max-w-[200px] min-w-[200px] text-center"
-                      key={"user1_attr_" + idx}
-                      style={{
-                        top: attributeMapUser1[idx]["top"],
-                        left: attributeMapUser1[idx]["left"],
-                      }}
-                    >
-                      {val}
-                    </p>
-                  );
-                })}
+        <>
+          <div className="flex gap-4 items-center grow">
+            <div className="w-[250px] h-full pt-[300px] flex-col flex relative">
+              <h1 className="text-3xl font-semibold w-full text-center">
+                {user1}
+              </h1>
+              <div className="absolute top-[calc(300px+125px)] w-full h-[calc(100%-300px-125px)] left-0 right-0 text-xl">
+                {sessionData?.session_data[sessionData.user1_id] &&
+                  sessionData?.session_data[sessionData.user1_id]
+                    .split(",")
+                    .map((val, idx) => {
+                      return (
+                        <p
+                          className="absolute -translate-x-1/2 -translate-y-1/2 max-w-[200px] min-w-[200px] text-center"
+                          key={"user1_attr_" + idx}
+                          style={{
+                            top: attributeMapUser1[idx]["top"],
+                            left: attributeMapUser1[idx]["left"],
+                          }}
+                        >
+                          {val}
+                        </p>
+                      );
+                    })}
+              </div>
+            </div>
+            <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]"></h1>
+            <div className="w-[250px] h-full pt-[300px] flex-col flex relative">
+              <h1 className="text-3xl font-semibold w-full text-center">
+                {user2}
+              </h1>
+              <div className="absolute top-[calc(300px+125px)] w-full h-[calc(100%-300px-125px)] left-0 right-0 text-xl">
+                {sessionData?.session_data[sessionData.user2_id] &&
+                  sessionData?.session_data[sessionData.user2_id]
+                    .split(",")
+                    .map((val, idx) => {
+                      return (
+                        <p
+                          className="absolute -translate-x-1/2 -translate-y-1/2 max-w-[200px] min-w-[200px] text-center"
+                          key={"user2_attr_" + idx}
+                          style={{
+                            top: attributeMapUser2[idx]["top"],
+                            left: attributeMapUser2[idx]["left"],
+                          }}
+                        >
+                          {val}
+                        </p>
+                      );
+                    })}
+              </div>
             </div>
           </div>
-          <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]"></h1>
-          <div className="w-[250px] h-full pt-[300px] flex-col flex relative">
-            <h1 className="text-3xl font-semibold w-full text-center">
-              {user2}
-            </h1>
-            <div className="absolute top-[calc(300px+125px)] w-full h-[calc(100%-300px-125px)] left-0 right-0 text-xl">
-              {sessionData?.session_data[sessionData.user2_id]
-                .split(",")
-                .map((val, idx) => {
-                  return (
-                    <p
-                      className="absolute -translate-x-1/2 -translate-y-1/2 max-w-[200px] min-w-[200px] text-center"
-                      key={"user2_attr_" + idx}
-                      style={{
-                        top: attributeMapUser2[idx]["top"],
-                        left: attributeMapUser2[idx]["left"],
-                      }}
-                    >
-                      {val}
-                    </p>
-                  );
-                })}
+          <div className="absolute top-[100%] h-full w-[1080px] flex mx-auto justify-center">
+            <div className="flex flex-col">
+              {sessionData?.session_data[sessionData.user1_id] &&
+                sessionData?.session_data[sessionData.user1_id]
+                  .split(",")
+                  .map((val, idx) => {
+                    return (
+                      <div
+                        className="box border p-2"
+                        key={"user1_a_" + idx}
+                        style={{
+                          backgroundColor: `hsl(${25 * idx}, 100%, 50%)`,
+                        }}
+                      >
+                        <div className="absolute top-2 left-2 text-xs">
+                          {idx + 1}
+                        </div>
+                        {val}
+                      </div>
+                    );
+                  })}
+            </div>
+            <div className="flex flex-col">
+              {sessionData?.session_data[sessionData.user2_id] &&
+                sessionData?.session_data[sessionData.user2_id]
+                  .split(",")
+                  .map((val, idx) => {
+                    return (
+                      <div
+                        className="box border p-2"
+                        key={"user2_a_" + idx}
+                        style={{
+                          backgroundColor: `hsl(${25 * (12 - idx)}, 100%, 50%)`,
+                        }}
+                      >
+                        <div className="absolute top-2 left-2 text-xs">
+                          {idx + 1 + 6}
+                        </div>
+                        {val}
+                      </div>
+                    );
+                  })}
             </div>
           </div>
-        </div>
+        </>
       ),
       duration: 10000,
     },
@@ -263,29 +311,29 @@ export default function HostState3({
   }, [isPlay]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (imgURL) {
-      setDisplayText(
-        <h1 className="text-3xl text-center flex flex-col gap-4 justify-center">
-          <span>Once again, thank you for participating!</span>
-          <span>We hope to see you soon!</span>
-          <div className="w-[500px] aspect-video relative mx-auto">
-            <img
-              src={imgURL}
-              onLoad={() => setLoading(false)}
-              className="w-full h-full rounded-md object-cover"
-            />
-            {loading && (
-              <Skeleton className="w-full h-full absolute top-0 left-0 rounded-md" />
-            )}
-          </div>
-          <Button variant={"secondary"} onClick={() => clearRoom()} className="w-fit mx-auto">
-            Reset Room
-          </Button>
-        </h1>
-      );
-    }
-  }, [imgURL]);
+  // useEffect(() => {
+  //   if (imgURL) {
+  //     setDisplayText(
+  //       <h1 className="text-3xl text-center flex flex-col gap-4 justify-center">
+  //         <span>Once again, thank you for participating!</span>
+  //         <span>We hope to see you soon!</span>
+  //         <div className="w-[500px] aspect-video relative mx-auto">
+  //           <img
+  //             src={imgURL}
+  //             onLoad={() => setLoading(false)}
+  //             className="w-full h-full rounded-md object-cover"
+  //           />
+  //           {loading && (
+  //             <Skeleton className="w-full h-full absolute top-0 left-0 rounded-md" />
+  //           )}
+  //         </div>
+  //         <Button variant={"secondary"} onClick={() => clearRoom()} className="w-fit mx-auto">
+  //           Reset Room
+  //         </Button>
+  //       </h1>
+  //     );
+  //   }
+  // }, [imgURL]);
 
   async function uploadImage(file: Blob) {
     let filePath = `${String(new Date().getTime())}_${room_id}.jpeg`;
@@ -317,7 +365,7 @@ export default function HostState3({
   }
 
   return (
-    <div className="min-w-[300px] w-full max-w-[1200px] mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
+    <div className="min-w-[300px] w-full max-w-[1200px] relative mx-auto h-full flex justify-center items-center my-auto flex-col gap-8 overflow-hidden">
       {displayText}
       <div className="hidden">
         <ReactPlayer

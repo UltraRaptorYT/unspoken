@@ -143,7 +143,7 @@ export default function State2({
       <div className="text-xl">{currentQn}</div>
       <ScaleableInput
         disabled={ready}
-        maxInput={7}
+        maxInput={6}
         attributeArr={attributeArr}
         inputChangeHandler={inputChangeHandler}
         inputRemoveHandler={inputRemoveHandler}
