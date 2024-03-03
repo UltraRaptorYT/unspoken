@@ -16,7 +16,7 @@ function Host() {
   const [channel, setChannel] = useState<RealtimeChannel>();
   const [currentState, setCurrentState] = useState<number>(0);
   const [readyState, setReadyState] = useState<ReadyState>({});
-  const [question, setQuestion] = useState<string>("");
+  const [question, _] = useState<string>("");
   const [dynamicChildren, setDynamicChildren] = useState<ReactNode | null>(
     null
   );
