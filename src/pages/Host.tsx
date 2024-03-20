@@ -240,11 +240,12 @@ function Host() {
     if (!data || data?.length == 0) {
       return console.log("ERROR IDK Y");
     } else {
-      // console.log(
-      //   currentState,
-      //   "SESSION DATA RECEIVED",
-      //   JSON.stringify(data[0])
-      // );
+      console.log(
+        currentState,
+        "SESSION DATA RECEIVED",
+        JSON.stringify(data[0])
+      );
+
       setDynamicChildren(
         <HostState3
           readyState={readyState}
