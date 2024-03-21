@@ -426,16 +426,18 @@ export default function HostState3({
           url={"/audio.mp3"}
           onEnded={() => {
             setIsPlay(false);
-            // setTimeout(() => {
-            //   if (webcamRef && webcamRef.current) {
-            //     const imageSrc = webcamRef.current.getScreenshot();
-            //     if (imageSrc) {
-            //       fetch(imageSrc)
-            //         .then((res) => res.blob())
-            //         .then(uploadImage);
-            //     }
-            //   }
-            // }, 2500);
+            if (!skip) {
+              setTimeout(() => {
+                if (webcamRef && webcamRef.current) {
+                  const imageSrc = webcamRef.current.getScreenshot();
+                  if (imageSrc) {
+                    fetch(imageSrc)
+                      .then((res) => res.blob())
+                      .then(uploadImage);
+                  }
+                }
+              }, 2500);
+            }
           }}
           config={{
             file: {
