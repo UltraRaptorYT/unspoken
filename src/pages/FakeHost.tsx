@@ -50,10 +50,11 @@ function FakeHost() {
             readyState={readyState}
             room_id={room_id}
             question={
-              '{"session_id":185,"room_id":"asd","user1_id":"b0c7ac90-5575-42e4-97ca-24576fcd0a60","user1_name":"asd","user2_id":"0299710a-7643-4dc9-830e-475ef42d2f2b","user2_name":"qwe","session_data":{"b0c7ac90-5575-42e4-97ca-24576fcd0a60":"qwe","0299710a-7643-4dc9-830e-475ef42d2f2b":"a,as,d,qw"},"created_at":"2024-03-20T16:28:59.943201+00:00"}'
+              '{"session_id":185,"room_id":"perspiciatis","user1_id":"b0c7ac90-5575-42e4-97ca-24576fcd0a60","user1_name":"Kuang Jun","user2_id":"0299710a-7643-4dc9-830e-475ef42d2f2b","user2_name":"Liming","session_data":{"b0c7ac90-5575-42e4-97ca-24576fcd0a60":"kind,generous,empathetic,optimistic,reliable,confident","0299710a-7643-4dc9-830e-475ef42d2f2b":"resilient,compassionate,resourceful,optimistic,empathetic,dependable"},"created_at":"2024-03-20T16:28:59.943201+00:00"}'
             }
             channel={undefined}
             clearRoom={() => {}}
+            skip={true}
           ></HostState3>
         ),
       };
