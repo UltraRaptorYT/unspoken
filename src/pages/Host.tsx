@@ -366,7 +366,7 @@ function Host() {
                 return (
                   <AttributeBox
                     attribute={e}
-                    idx={idx}
+                    idx={idx + 6}
                     key={"attribute_user2_" + idx}
                   />
                 );
