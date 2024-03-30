@@ -1,24 +1,14 @@
 import { ReadyState } from "@/types";
 import { useState, useEffect, useRef, ReactNode, useMemo } from "react";
 import ReactPlayer from "react-player";
-import AttributeBox from "@/components/AttributeBox";
 // import Silhouette from "@/components/Silhouette";
 import { Skeleton } from "@/components/ui/skeleton";
 import Webcam from "react-webcam";
 import supabase from "@/lib/supabase";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-
-type SessionDataType = {
-  session_id: number;
-  room_id: string;
-  user1_id: string;
-  user1_name: string;
-  user2_id: string;
-  user2_name: string;
-  session_data: { [key: string]: string };
-  created_at: Date;
-};
+import { useAtom } from "jotai";
+import { session_data } from "@/pages/Host";
 
 const videoConstraints = {
   width: 1920,
@@ -43,7 +33,7 @@ export default function HostState3({
   let [user1, setUser1] = useState<string>("");
   let [user2, setUser2] = useState<string>("");
   let [imgURL, setImgURL] = useState<string>("");
-  let [sessionData, setSessionData] = useState<SessionDataType | null>();
+  let [sessionData, setSessionData] = useAtom(session_data);
   const webcamRef = useRef<Webcam>(null);
   // const attributeMapUser1 = [
   //   { top: "50%", left: "-35%" },
@@ -99,12 +89,13 @@ export default function HostState3({
   //     return data[0];
   //   }
   // }
+  // useEffect(() => {
+  //   if (initialSessionData !== null) {
+  //     setSessionData(initialSessionData);
+  //   }
+  // }, [initialSessionData]);
 
-  useEffect(() => {
-    if (initialSessionData !== null) {
-      setSessionData(initialSessionData);
-    }
-  }, [initialSessionData]);
+  //  && textState == textMapString.length - 1
 
   useEffect(() => {
     if (sessionData) {
@@ -117,7 +108,7 @@ export default function HostState3({
     {
       text: (
         <h1 className="text-3xl text-center flex flex-col gap-2 justify-center">
-          Thank you for participating
+          Thank you for participating in unspoken
         </h1>
       ),
       duration: 2500,
@@ -175,7 +166,7 @@ export default function HostState3({
     {
       text: (
         <div className="w-full flex grow">
-          <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
+          {/* <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
             {sessionData?.session_data[sessionData.user1_id] &&
               sessionData?.session_data[sessionData.user1_id]
                 .split(",")
@@ -188,8 +179,8 @@ export default function HostState3({
                     />
                   );
                 })}
-          </div>
-          <div className="min-w-[500px] w-full max-w-[500px] mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
+          </div> */}
+          <div className="w-full mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
             <div className="flex flex-col gap-2.5">
               <h1 className="text-4xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
                 unspoken.
@@ -201,7 +192,7 @@ export default function HostState3({
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
+          {/* <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
             {sessionData?.session_data[sessionData.user2_id] &&
               sessionData?.session_data[sessionData.user2_id]
                 .split(",")
@@ -214,7 +205,7 @@ export default function HostState3({
                     />
                   );
                 })}
-          </div>
+          </div> */}
         </div>
       ),
       duration: 100000,
@@ -331,6 +322,19 @@ export default function HostState3({
   let [isPlay2, setIsPlay2] = useState<boolean>(false);
 
   useEffect(() => {
+    if (initialSessionData !== null && textState >= textMapString.length - 1) {
+      setSessionData(initialSessionData);
+    }
+  }, [textState]);
+
+  useEffect(() => {
+    if (initialSessionData !== null) {
+      setUser1(initialSessionData.user1_name);
+      setUser2(initialSessionData.user2_name);
+    }
+  }, [initialSessionData]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       // Move to the next text after the specified duration
       setTextState((prevIndex) => {
@@ -367,7 +371,7 @@ export default function HostState3({
         <h1 className="text-3xl text-center flex flex-col gap-4 justify-center">
           <span>Once again, thank you for participating!</span>
           <span>We hope to see you soon!</span>
-          <div className="w-[500px] aspect-video relative mx-auto">
+          <div className="w-full aspect-video relative mx-auto p-2">
             <img
               src={imgURL}
               onLoad={() => setLoading(false)}
@@ -419,7 +423,7 @@ export default function HostState3({
   }
 
   return (
-    <div className="min-w-[300px] w-full max-w-[1200px] relative mx-auto h-full flex justify-center items-center my-auto flex-col gap-8 overflow-hidden">
+    <div className="min-w-[300px] w-full max-w-[500px] mx-auto h-full flex justify-center items-center my-auto flex-col gap-8">
       {displayText}
       <div className="hidden">
         <ReactPlayer

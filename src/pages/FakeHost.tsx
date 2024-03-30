@@ -5,6 +5,9 @@ import HostState2 from "@/components/state/host/HostState2";
 import HostState3 from "@/components/state/host/HostState3";
 import { ReadyState, StateMappingType } from "@/types";
 import { Button } from "@/components/ui/button";
+import AttributeBox from "@/components/AttributeBox";
+import { useAtom } from "jotai";
+import { session_data, BASE } from "@/pages/Host";
 
 type GenerateStateMapping = (readyState: ReadyState) => StateMappingType;
 
@@ -15,7 +18,8 @@ function FakeHost() {
     null
   );
   const [readyState, setReadyState] = useState<ReadyState>({});
-  const [question, _] = useState<string>("");
+  const [question] = useState<string>("");
+  const [sessionData, setSessionData] = useAtom(session_data);
 
   useEffect(() => {
     console.log("IDK", currentState);
@@ -77,9 +81,47 @@ function FakeHost() {
       });
   }, []);
 
+  useEffect(() => {
+    if (currentState != 3) {
+      setSessionData(BASE);
+    } else {
+      // setSessionData()
+    }
+  }, [currentState]);
+
   return (
-    <div className="h-full relative">
-      {dynamicChildren}
+    <div className="h-full relative min-w-[300px] w-full max-w-[1200px] mx-auto flex justify-center items-center my-auto flex-col gap-8 overflow-hidden">
+      <div className="h-full w-full flex grow">
+        <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
+          {sessionData?.session_data[sessionData.user1_id] &&
+            sessionData?.session_data[sessionData.user1_id]
+              .split(",")
+              .map((e, idx) => {
+                return (
+                  <AttributeBox
+                    attribute={e}
+                    idx={idx}
+                    key={"attribute_user1_" + idx}
+                  />
+                );
+              })}
+        </div>
+        {dynamicChildren}
+        <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
+          {sessionData?.session_data[sessionData.user2_id] &&
+            sessionData?.session_data[sessionData.user2_id]
+              .split(",")
+              .map((e, idx) => {
+                return (
+                  <AttributeBox
+                    attribute={e}
+                    idx={idx}
+                    key={"attribute_user2_" + idx}
+                  />
+                );
+              })}
+        </div>
+      </div>
       <div className="flex gap-5 absolute top-[75%] -translate-y-1/2 left-1/2 -translate-x-1/2">
         <Button
           onClick={() => {

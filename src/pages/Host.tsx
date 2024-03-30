@@ -8,6 +8,34 @@ import HostState1 from "@/components/state/host/HostState1";
 import HostState2 from "@/components/state/host/HostState2";
 import HostState3 from "@/components/state/host/HostState3";
 import { useToast } from "@/components/ui/use-toast";
+import { atom, useAtom } from "jotai";
+import AttributeBox from "@/components/AttributeBox";
+
+export type SessionDataType = {
+  session_id: number;
+  room_id: string;
+  user1_id: string;
+  user1_name: string;
+  user2_id: string;
+  user2_name: string;
+  session_data: { [key: string]: string };
+  created_at: Date;
+};
+
+export const BASE = {
+  session_id: 0,
+  room_id: "",
+  user1_id: "",
+  user1_name: "",
+  user2_id: "",
+  user2_name: "",
+  session_data: {
+    "": ",,,,,",
+  },
+  created_at: new Date(),
+};
+
+export const session_data = atom<SessionDataType>(BASE);
 
 type GenerateStateMapping = (readyState: ReadyState) => StateMappingType;
 
@@ -16,11 +44,12 @@ function Host() {
   const [channel, setChannel] = useState<RealtimeChannel>();
   const [currentState, setCurrentState] = useState<number>(0);
   const [readyState, setReadyState] = useState<ReadyState>({});
-  const [question, _] = useState<string>("");
+  const [question] = useState<string>("");
   const [dynamicChildren, setDynamicChildren] = useState<ReactNode | null>(
     null
   );
   const { toast } = useToast();
+  const [sessionData, setSessionData] = useAtom(session_data);
 
   // async function getQuestion() {
   //   const { data, error } = await supabase
@@ -286,6 +315,8 @@ function Host() {
     handleStateChange();
     if (currentState === 3) {
       getSessionData();
+    } else {
+      setSessionData(BASE);
     }
   }, [currentState]);
 
@@ -309,7 +340,41 @@ function Host() {
     }
   }, [dynamicChildren]);
 
-  return dynamicChildren;
+  return (
+    <div className="h-full relative min-w-[300px] w-full max-w-[1200px] mx-auto flex justify-center items-center my-auto flex-col gap-8 overflow-hidden">
+      <div className="h-full w-full flex grow">
+        <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
+          {sessionData?.session_data[sessionData.user1_id] &&
+            sessionData?.session_data[sessionData.user1_id]
+              .split(",")
+              .map((e, idx) => {
+                return (
+                  <AttributeBox
+                    attribute={e}
+                    idx={idx}
+                    key={"attribute_user1_" + idx}
+                  />
+                );
+              })}
+        </div>
+        {dynamicChildren}
+        <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
+          {sessionData?.session_data[sessionData.user2_id] &&
+            sessionData?.session_data[sessionData.user2_id]
+              .split(",")
+              .map((e, idx) => {
+                return (
+                  <AttributeBox
+                    attribute={e}
+                    idx={idx}
+                    key={"attribute_user2_" + idx}
+                  />
+                );
+              })}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Host;
