@@ -21,7 +21,7 @@ export default function AttributeBox({
   ];
   return (
     <div
-      className="w-full flex items-center justify-center border aspect-square p-4 text-center"
+      className="w-full flex items-center justify-center border aspect-square p-4 text-center text-lg font-bold"
       style={{ background: "#" + colorArr[idx] }}
     >
       {attribute}
