@@ -71,11 +71,13 @@ function Host() {
     if (error) {
       return console.log(error);
     }
-    setCurrentState(0);
     toast({
       title: "Room has been reset",
       duration: 1000,
     });
+    setTimeout(() => {
+      setCurrentState(0);
+    }, 100);
   }
 
   useEffect(() => {
@@ -340,37 +342,47 @@ function Host() {
     }
   }, [dynamicChildren]);
 
+  function addLength(arr: string[]) {
+    let newArr = [...arr, ...Array(Math.max(0, 6 - arr.length)).fill("")];
+    console.log(newArr);
+    return newArr;
+  }
+
   return (
     <div className="h-full relative min-w-[300px] w-full max-w-[1200px] mx-auto flex justify-center items-center my-auto flex-col gap-8 overflow-hidden">
       <div className="h-full w-full flex grow">
         <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
           {sessionData?.session_data[sessionData.user1_id] &&
-            sessionData?.session_data[sessionData.user1_id]
-              .split(",")
-              .map((e, idx) => {
-                return (
-                  <AttributeBox
-                    attribute={e}
-                    idx={idx}
-                    key={"attribute_user1_" + idx}
-                  />
-                );
-              })}
+            addLength(
+              (sessionData as SessionDataType)?.session_data[
+                sessionData.user1_id
+              ].split(",")
+            ).map((e, idx) => {
+              return (
+                <AttributeBox
+                  attribute={e}
+                  idx={idx}
+                  key={"attribute_user1_" + idx}
+                />
+              );
+            })}
         </div>
         {dynamicChildren}
         <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
           {sessionData?.session_data[sessionData.user2_id] &&
-            sessionData?.session_data[sessionData.user2_id]
-              .split(",")
-              .map((e, idx) => {
-                return (
-                  <AttributeBox
-                    attribute={e}
-                    idx={idx + 6}
-                    key={"attribute_user2_" + idx}
-                  />
-                );
-              })}
+            addLength(
+              (sessionData as SessionDataType)?.session_data[
+                sessionData.user2_id
+              ].split(",")
+            ).map((e, idx) => {
+              return (
+                <AttributeBox
+                  attribute={e}
+                  idx={idx + 6}
+                  key={"attribute_user2_" + idx}
+                />
+              );
+            })}
         </div>
       </div>
     </div>

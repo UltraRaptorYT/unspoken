@@ -95,10 +95,10 @@ function Home() {
         <h1 className="text-3xl">unspoken.</h1>
         <Input type="text" placeholder="Room Code" ref={inputRef} />
         <div className="flex justify-between items-center w-full">
-          <Button variant={"secondary"} onClick={joinRoom}>
+          <Button variant={"default"} onClick={joinRoom}>
             Join Room
           </Button>
-          <Button variant={"default"} onClick={createRoom}>
+          <Button variant={"secondary"} onClick={createRoom}>
             Create Room
           </Button>
         </div>
