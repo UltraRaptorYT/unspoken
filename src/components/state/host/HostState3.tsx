@@ -121,6 +121,11 @@ export default function HostState3({
             <span>It's time for a photo!</span>
             <span>Stand in front of screen</span>
             <span>and POSE!</span>
+            <div className="w-full text-center text-lg">
+              <span>{user1}</span>
+              <span> & </span>
+              <span>{user2}</span>
+            </div>
           </h1>
           {/* <Silhouette name={user2}></Silhouette> */}
         </div>

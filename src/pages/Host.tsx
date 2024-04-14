@@ -75,6 +75,7 @@ function Host() {
       title: "Room has been reset",
       duration: 1000,
     });
+    setCurrentState(0);
     setTimeout(() => {
       setCurrentState(0);
     }, 100);
@@ -177,6 +178,7 @@ function Host() {
               });
             }
           }
+          setCurrentState(0);
         })
         .on("presence", { event: "leave" }, async ({ key, leftPresences }) => {
           console.log("leave", key, leftPresences);
@@ -187,6 +189,7 @@ function Host() {
                 delete newState[presence.user_id];
                 return newState;
               });
+              setCurrentState(0);
             }
           }
           setCurrentState(0);
