@@ -120,8 +120,9 @@ export default function HostState3({
           <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
             <span>It's time for a photo!</span>
             <span>Stand in front of screen</span>
+            <span>following your name</span>
             <span>and POSE!</span>
-            <div className="w-full text-center text-lg">
+            <div className="w-full text-center text-4xl">
               <span>{user1}</span>
               <span> & </span>
               <span>{user2}</span>
