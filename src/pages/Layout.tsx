@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
 function Layout() {
   return (
@@ -9,7 +9,7 @@ function Layout() {
       <main className="min-h-[100dvh] h-full bg-white dark:bg-[#080c15] flex dark:text-white text-black w-full">
         <div className="grow w-full">
           <Outlet />
-          <Toaster />
+          <Toaster richColors />
         </div>
       </main>
       <div className="fixed bottom-3 left-3">

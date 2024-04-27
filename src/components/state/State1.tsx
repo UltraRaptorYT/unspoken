@@ -2,8 +2,8 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import CustomButton from "@/components/CustomButton";
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import supabase from "@/lib/supabase";
+import { toast } from "sonner";
 
 export default function State1({
   channel,
@@ -17,7 +17,6 @@ export default function State1({
   room_id: string | undefined;
 }) {
   const [ready, setReady] = useState<boolean>(false);
-  const { toast } = useToast();
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -71,11 +70,7 @@ export default function State1({
         addSessionData(inputValue);
         setReady((prevState) => !prevState);
       } else {
-        toast({
-          title: "Please enter your name",
-          variant: "destructive",
-          duration: 1000,
-        });
+        toast.error("Please enter your name");
       }
     }
   }

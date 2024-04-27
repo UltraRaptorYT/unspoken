@@ -13,9 +13,9 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/downloadImageURL" element={<Image />} />
         <Route path="/:room_id" element={<Room />} />
         <Route path="/host/:room_id" element={<Host />} />
-        <Route path="/image/:image_url" element={<Image />} />
         <Route path="/fake/host" element={<FakeHost />} />
         {/* 404 ERROR */}
         <Route path="/*" element={<Error />} />

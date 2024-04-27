@@ -106,7 +106,9 @@ function FakeHost() {
                 );
               })}
         </div>
-        {dynamicChildren}
+        <div className="p-5 grow min-w-[350px] max-w-[350px]">
+          {dynamicChildren}
+        </div>
         <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
           {sessionData?.session_data[sessionData.user2_id] &&
             sessionData?.session_data[sessionData.user2_id]

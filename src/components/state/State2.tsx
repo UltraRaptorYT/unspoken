@@ -1,9 +1,9 @@
 import { RealtimeChannel } from "@supabase/supabase-js";
 import CustomButton from "@/components/CustomButton";
 import { useState, useEffect } from "react";
-import { useToast } from "@/components/ui/use-toast";
 import supabase from "@/lib/supabase";
 import ScaleableInput from "../ScalebleInput";
+import { toast } from "sonner";
 
 export default function State2({
   channel,
@@ -18,7 +18,6 @@ export default function State2({
 }) {
   const [ready, setReady] = useState<boolean>(false);
   let [currentQn, setCurrentQn] = useState<string>("");
-  const { toast } = useToast();
   const [attributeArr, setAttributeArr] = useState<string[]>([""]);
 
   useEffect(() => {
@@ -98,15 +97,13 @@ export default function State2({
 
   async function checkInput() {
     if (attributeArr.filter((e) => e).length == 0) {
-      return toast({
-        title: "Please enter something you like about the other person",
-        variant: "destructive",
-        duration: 1000,
-      });
+      return toast.error(
+        "Please enter something you like about the other person"
+      );
     } else {
       setAttributeArr((prevState) => {
         let list = [...prevState];
-        list = list.filter((val,idx) => val && list.indexOf(val) == idx);
+        list = list.filter((val, idx) => val && list.indexOf(val) == idx);
         addSessionData(list.join(","));
         return list;
       });

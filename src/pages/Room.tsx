@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import supabase from "@/lib/supabase";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
-import { ROOM_TYPE, StateMappingType, QuestionType } from "@/types";
+import { StateMappingType, QuestionType } from "@/types";
 import State0 from "@/components/state/State0";
 import State1 from "@/components/state/State1";
 import State2 from "@/components/state/State2";
@@ -23,6 +23,8 @@ function Room() {
   const [dynamicChildren, setDynamicChildren] = useState<ReactNode | null>(
     null
   );
+  const [QRImage, SetQRImage] = useState<string>("");
+  const [imgURL, setImgURL] = useState<string>("");
 
   async function getQuestion() {
     const { data, error } = await supabase
@@ -35,6 +37,21 @@ function Room() {
     console.log(data);
     let currentQn = data[0];
     setQuestion((currentQn as QuestionType).question);
+  }
+
+  async function downloadImage(imgURL: string) {
+    const link = document.createElement("a");
+    link.setAttribute("target", "_blank");
+    link.download = imgURL.substring(
+      imgURL.lastIndexOf("/") + 1,
+      imgURL.length
+    );
+    let data = await fetch(imgURL);
+    let blob = await data.blob();
+    link.href = URL.createObjectURL(blob);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   useEffect(() => {
@@ -83,19 +100,6 @@ function Room() {
     handleStateChange();
   }, [currentState, channel]);
 
-  async function checkRoomState() {
-    let { data, error } = await supabase
-      .from("unspoken_user_room")
-      .select()
-      .eq("room_id", room_id);
-    if (error) {
-      return console.error("Error");
-    }
-    if (data && data.length > 2) {
-      return navigate("/");
-    }
-  }
-
   async function checkRoomExist() {
     let { data, error } = await supabase
       .from("unspoken_room")
@@ -108,49 +112,39 @@ function Room() {
     if (data?.length == 0) {
       return navigate("/");
     }
-    await checkRoomState();
-    setCurrentState((data as ROOM_TYPE[])[0]?.state);
+    // await checkRoomState();
+    // setCurrentState((data as ROOM_TYPE[])[0]?.state);
     return console.log("ROOM OKAY");
   }
 
-  async function addUser() {
-    let { error } = await supabase
-      .from("unspoken_user")
-      .insert({ user_id: user_id })
-      .select();
-    if (error) {
-      return console.error("Error");
-    }
-    return console.log(`USER ${user_id} INSERTED`);
-  }
-
-  async function addUserRoom(user_id: string, room_id: string) {
-    let { error } = await supabase
-      .from("unspoken_user_room")
-      .insert({ user_id: user_id, room_id: room_id })
-      .select();
-    if (error) {
-      return console.error("Error");
-    }
-    return console.log(`USER ${user_id} INSERTED INTO ROOM ${room_id}`);
-  }
-
-  async function removeUserRoom(user_id: string, room_id: string) {
-    let { error } = await supabase
-      .from("unspoken_user_room")
-      .delete()
-      .eq("user_id", user_id)
-      .eq("room_id", room_id);
-    if (error) {
-      return console.error("Error");
-    }
-    return console.log(`USER ${user_id} REMOVED FROM ROOM ${room_id}`);
-  }
+  useEffect(() => {
+    SetQRImage(
+      `https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=5&data=${
+        import.meta.env.VITE_CLIENT_URL
+      }/downloadImageURL?imageURL=${imgURL}`
+    );
+    setDynamicChildren(() => {
+      return (
+        <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow">
+          <img src={imgURL} className="w-full" />
+          <div>Screenshot Page to save download URL</div>
+          <div className="w-[150px] aspect-square relative">
+            <img src={QRImage} className="w-full h-full rounded-md" />
+          </div>
+          <div className="text-xl text-center">Download Image here!</div>
+          <Button variant={"secondary"} onClick={() => downloadImage(imgURL)}>
+            Download here
+          </Button>
+        </div>
+      );
+    });
+  }, [imgURL]);
 
   useEffect(() => {
+    console.log(user_id);
     if (room_id) {
       checkRoomExist();
-      const channel = supabase.channel(`${room_id}_room`, {
+      let channel = supabase.channel(`${room_id}_room`, {
         config: {
           broadcast: {
             self: true,
@@ -162,39 +156,24 @@ function Room() {
       });
 
       channel
-        .on("presence", { event: "sync" }, () => {
+        .on("presence", { event: "sync" }, async () => {
           const newState = channel.presenceState();
           console.log("sync", newState);
         })
         .on("presence", { event: "join" }, async ({ key, newPresences }) => {
           console.log("join", key, newPresences);
-          await addUser();
-          await addUserRoom(key, room_id);
-          await checkRoomState();
         })
         .on("presence", { event: "leave" }, async ({ key, leftPresences }) => {
           console.log("leave", key, leftPresences);
-          await removeUserRoom(key, room_id);
-          await checkRoomState();
-          setCurrentState(0);
         });
 
-      async function downloadImage(imgURL: string) {
-        const link = document.createElement("a");
-        link.setAttribute("target", "_blank");
-        link.download = imgURL.substring(
-          imgURL.lastIndexOf("/") + 1,
-          imgURL.length
-        );
-        let data = await fetch(imgURL);
-        let blob = await data.blob();
-        link.href = URL.createObjectURL(blob);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-
       channel
+        .on("broadcast", { event: "kick-room" }, (payload) => {
+          console.log(payload);
+          if (payload.payload.user_id == user_id) {
+            navigate("/");
+          }
+        })
         .on(
           "broadcast",
           { event: "stateChange" },
@@ -208,17 +187,7 @@ function Room() {
           { event: "getImage" },
           ({ payload }: { payload: { imgURL: string } }) => {
             console.log(payload);
-            setDynamicChildren(
-              <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow">
-                <div className="text-xl text-center">Download Image here!</div>
-                <Button
-                  variant={"secondary"}
-                  onClick={() => downloadImage(payload.imgURL)}
-                >
-                  Download here
-                </Button>
-              </div>
-            );
+            setImgURL(payload.imgURL);
           }
         )
         .on(
