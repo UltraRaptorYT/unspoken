@@ -1,10 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export default function Image() {
-  let { image_url } = useParams();
+  let [searchParams, setSearchParams] = useSearchParams();
+  const [imageURL, setImageURL] = useState<string | null>();
+  useEffect(() => {
+    console.log(searchParams);
+    if (searchParams.get("imageURL")) {
+      setImageURL(searchParams.get("imageURL"));
+    }
+  }, [searchParams]);
 
   async function downloadImage(imgURL: string) {
     const link = document.createElement("a");
@@ -25,7 +33,7 @@ export default function Image() {
       <div className="text-xl text-center">Download Image here!</div>
       <Button
         variant={"secondary"}
-        onClick={() => downloadImage(image_url || "")}
+        onClick={() => downloadImage(imageURL || "")}
       >
         Download here
       </Button>

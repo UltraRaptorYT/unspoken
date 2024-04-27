@@ -117,11 +117,9 @@ export default function HostState3({
       text: (
         <div className="flex gap-4 items-center grow">
           {/* <Silhouette name={user1}></Silhouette> */}
-          <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[350px] max-w-[350px]">
+          <h1 className="text-3xl text-center flex flex-col gap-2 justify-center min-w-[340px] max-w-[340px] p-3">
             <span>It's time for a photo!</span>
-            <span>Stand in front of screen</span>
-            <span>following your name</span>
-            <span>and POSE!</span>
+            <span>Stand in front of screen following your name and POSE!</span>
             <div className="w-full text-center text-4xl">
               <span>{user1}</span>
               <span> & </span>

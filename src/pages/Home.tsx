@@ -3,11 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import supabase from "@/lib/supabase";
 
 function Home() {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -40,11 +39,7 @@ function Home() {
     }
     let room_id: string = inputRef.current.value;
     if (room_id.trim().length == 0) {
-      toast({
-        title: "Invalid Room Code",
-        variant: "destructive",
-        duration: 1000,
-      });
+      toast.error("Invalid Room Code");
       return;
     }
     const { data, error } = await supabase
@@ -56,11 +51,7 @@ function Home() {
       return;
     }
     if (data.length == 0) {
-      toast({
-        title: "Invalid Room Code",
-        variant: "destructive",
-        duration: 1000,
-      });
+      toast.error("Invalid Room Code");
       return;
     }
     const roomFull = await checkRoomStatus(room_id);
@@ -79,11 +70,7 @@ function Home() {
       return true;
     }
     if (data.length >= 2) {
-      toast({
-        title: "Room is Full",
-        variant: "destructive",
-        duration: 1000,
-      });
+      toast.error("Room is Full");
       return true;
     }
     return false;
