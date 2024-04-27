@@ -29,7 +29,7 @@ export const BASE = {
   user2_id: "",
   user2_name: "",
   session_data: {
-    "": ",,,,,",
+    "": "|||||",
   },
   created_at: new Date(),
 };
@@ -358,7 +358,7 @@ function Host() {
             addLength(
               (sessionData as SessionDataType)?.session_data[
                 sessionData.user1_id
-              ].split(",")
+              ].split("|")
             ).map((e, idx) => {
               return (
                 <AttributeBox
@@ -377,7 +377,7 @@ function Host() {
             addLength(
               (sessionData as SessionDataType)?.session_data[
                 sessionData.user2_id
-              ].split(",")
+              ].split("|")
             ).map((e, idx) => {
               return (
                 <AttributeBox

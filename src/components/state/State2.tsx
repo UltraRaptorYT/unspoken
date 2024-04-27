@@ -104,7 +104,7 @@ export default function State2({
       setAttributeArr((prevState) => {
         let list = [...prevState];
         list = list.filter((val, idx) => val && list.indexOf(val) == idx);
-        addSessionData(list.join(","));
+        addSessionData(list.join("|"));
         return list;
       });
       setReady((prevState) => !prevState);
