@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export default function Image() {
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   const [imageURL, setImageURL] = useState<string | null>();
   useEffect(() => {
     console.log(searchParams);
