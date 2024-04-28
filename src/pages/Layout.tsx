@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 function Layout() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <main className="min-h-[100dvh] h-full bg-white dark:bg-[#080c15] flex dark:text-white text-black w-full">
+      <main className="fullHeight bg-white dark:bg-[#080c15] flex dark:text-white text-black w-full">
         <div className="grow w-full">
           <Outlet />
           <Toaster richColors />

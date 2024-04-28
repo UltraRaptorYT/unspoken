@@ -19,3 +19,8 @@ body {
   align-items: center;
   position: relative;
 }
+
+.fullHeight {
+  height: 100vh;
+  height: 100dvh;
+}
