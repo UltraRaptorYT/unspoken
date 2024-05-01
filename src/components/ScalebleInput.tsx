@@ -23,7 +23,7 @@ export default function ScaleableInput({
     <div className="flex flex-col w-full gap-3">
       {attributeArr.map((value, key) => {
         return (
-          <div className="flex w-full max-w-sm items-center space-x-2">
+          <div className="flex w-full max-w-sm items-center space-x-2" key={"div" + key}>
             <Input
               key={"input" + key}
               defaultValue={value}

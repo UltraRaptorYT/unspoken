@@ -23,7 +23,6 @@ function Room() {
   const [dynamicChildren, setDynamicChildren] = useState<ReactNode | null>(
     null
   );
-  const [QRImage, SetQRImage] = useState<string>("");
   const [imgURL, setImgURL] = useState<string>("");
 
   async function getQuestion() {
@@ -118,18 +117,21 @@ function Room() {
   }
 
   useEffect(() => {
-    SetQRImage(
-      `https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=5&data=${
-        import.meta.env.VITE_CLIENT_URL
-      }/downloadImageURL?imageURL=${imgURL}`
-    );
+    if (!imgURL) {
+      return;
+    }
     setDynamicChildren(() => {
       return (
         <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow">
           <img src={imgURL} className="w-full" />
           <div>Screenshot Page to save download URL</div>
           <div className="w-[150px] aspect-square relative">
-            <img src={QRImage} className="w-full h-full rounded-md" />
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=5&data=${
+                import.meta.env.VITE_CLIENT_URL
+              }/downloadImageURL?imageURL=${imgURL}`}
+              className="w-full h-full rounded-md"
+            />
           </div>
           <div className="text-xl text-center">Download Image here!</div>
           <Button variant={"secondary"} onClick={() => downloadImage(imgURL)}>
