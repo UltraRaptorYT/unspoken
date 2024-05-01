@@ -38,6 +38,13 @@ export const session_data = atom<SessionDataType>(BASE);
 
 type GenerateStateMapping = (readyState: ReadyState) => StateMappingType;
 
+type FakeData = {
+  [key: string]: {
+    name?: string;
+    attributes?: string;
+  };
+};
+
 function Host() {
   let { room_id } = useParams();
   const [channel, setChannel] = useState<RealtimeChannel>();
@@ -48,6 +55,8 @@ function Host() {
   const [readyState, setReadyState] = useState<ReadyState>({});
   const [question] = useState<string>("");
   const [sessionData, setSessionData] = useAtom(session_data);
+
+  const [fakeData, setFakeData] = useState<FakeData>({});
 
   useEffect(() => {
     console.log("IDK", currentState);
@@ -172,6 +181,24 @@ function Host() {
       console.log(error);
     }
   }
+
+  function objectsAreEqual(obj1: any, obj2: any) {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (let key of keys1) {
+      if (obj1[key] !== obj2[key]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   async function getSessionData() {
     let { data, error } = await supabase
       .from("unspoken_session")
@@ -187,17 +214,38 @@ function Host() {
     if (!data || data?.length == 0) {
       return console.log("ERROR IDK Y");
     } else {
+      let finalData = { ...data[0] };
       console.log(
         currentState,
         "SESSION DATA RECEIVED",
-        JSON.stringify(data[0])
+        JSON.stringify(finalData)
       );
 
+      console.log(fakeData);
+      if (finalData) {
+        if (!finalData["user1_name"]) {
+          finalData["user1_name"] = fakeData[finalData.user1_id]["name"];
+        }
+        if (!finalData["user2_name"]) {
+          finalData["user2_name"] = fakeData[finalData.user2_id]["name"];
+        }
+        let sessionData: { [key: string]: string } = {};
+        fakeData;
+        for (let key in fakeData) {
+          if (fakeData.hasOwnProperty(key)) {
+            sessionData[key] = fakeData[key].attributes || "";
+          }
+        }
+        if (!objectsAreEqual(finalData["sessionData"], sessionData)) {
+          finalData["sessionData"] = sessionData;
+        }
+      }
+      console.log("final", finalData);
       setDynamicChildren(
         <HostState3
           readyState={readyState}
           room_id={room_id}
-          question={JSON.stringify(data[0])}
+          question={JSON.stringify(finalData)}
           channel={channel}
           clearRoom={clearRoom}
         ></HostState3>
@@ -324,15 +372,43 @@ function Host() {
           setCurrentState(0);
         });
 
-      channel.on("broadcast", { event: "ready" }, ({ payload }) => {
-        console.log(payload);
-        setReadyState((prevState) => {
-          const newState = { ...prevState };
-          newState[payload.user_id] = payload.state;
-          console.log("new", newState);
-          return newState;
+      channel
+        .on("broadcast", { event: "ready" }, ({ payload }) => {
+          console.log(payload);
+          setReadyState((prevState) => {
+            const newState = { ...prevState };
+            newState[payload.user_id] = payload.state;
+            console.log("new", newState);
+            return newState;
+          });
+        })
+        .on("broadcast", { event: "enter-name" }, ({ payload }) => {
+          console.log(payload, sessionData);
+          setSessionData(payload.session_state);
+          setFakeData((prev) => {
+            let newFakeData = { ...prev };
+            console.log("testload", payload, payload["name"]);
+            if (!(payload["user_id"] in newFakeData)) {
+              newFakeData[payload["user_id"]] = {};
+            }
+            newFakeData[payload["user_id"]]["name"] = payload["name"];
+            return newFakeData;
+          });
+        })
+        .on("broadcast", { event: "enter-attributes" }, ({ payload }) => {
+          console.log(payload, sessionData);
+          setSessionData(payload.session_state);
+          setFakeData((prev) => {
+            let newFakeData = { ...prev };
+            console.log("testload", payload, payload["attributes"]);
+            if (!(payload["user_id"] in newFakeData)) {
+              newFakeData[payload["user_id"]] = {};
+            }
+            newFakeData[payload["user_id"]]["attributes"] =
+              payload["attributes"];
+            return newFakeData;
+          });
         });
-      });
 
       channel.subscribe();
       setChannel(channel);
@@ -354,7 +430,7 @@ function Host() {
     <div className="h-full relative min-w-[300px] w-full max-w-[1200px] mx-auto flex justify-center items-center my-auto flex-col gap-8 overflow-hidden">
       <div className="h-full w-full flex grow">
         <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
-          {sessionData?.session_data[sessionData.user1_id] &&
+          {(sessionData?.session_data[sessionData.user1_id] &&
             addLength(
               (sessionData as SessionDataType)?.session_data[
                 sessionData.user1_id
@@ -367,18 +443,36 @@ function Host() {
                   key={"attribute_user1_" + idx}
                 />
               );
+            })) ||
+            [...new Array(6)].map((e, idx) => {
+              return (
+                <AttributeBox
+                  attribute={e}
+                  idx={idx + 6}
+                  key={"attribute_user2_" + idx}
+                />
+              );
             })}
         </div>
         <div className="p-5 grow min-w-[350px] max-w-[350px]">
           {dynamicChildren}
         </div>
         <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
-          {sessionData?.session_data[sessionData.user2_id] &&
+          {(sessionData?.session_data[sessionData.user2_id] &&
             addLength(
               (sessionData as SessionDataType)?.session_data[
                 sessionData.user2_id
               ].split("|")
             ).map((e, idx) => {
+              return (
+                <AttributeBox
+                  attribute={e}
+                  idx={idx + 6}
+                  key={"attribute_user2_" + idx}
+                />
+              );
+            })) ||
+            [...new Array(6)].map((e, idx) => {
               return (
                 <AttributeBox
                   attribute={e}

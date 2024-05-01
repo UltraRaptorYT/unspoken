@@ -40,26 +40,43 @@ export default function State1({
         return console.log(error);
       }
       let currentSession = data ? data[0] : null;
+      let global;
       if (currentSession) {
         console.log(currentSession);
         if (user_id == currentSession.user1_id) {
-          const { error } = await supabase
+          const { data, error } = await supabase
             .from("unspoken_session")
             .update({ user1_name: user_name })
-            .eq("session_id", currentSession.session_id);
+            .eq("session_id", currentSession.session_id)
+            .select();
           if (error) {
             return console.log(error);
           }
+          console.log(data);
+          global = data;
         } else if (user_id == currentSession.user2_id) {
-          const { error } = await supabase
+          const { data, error } = await supabase
             .from("unspoken_session")
             .update({ user2_name: user_name })
-            .eq("session_id", currentSession.session_id);
+            .eq("session_id", currentSession.session_id)
+            .select();
           if (error) {
             return console.log(error);
           }
+          console.log(data);
+          global = data;
         }
       }
+
+      channel?.send({
+        type: "broadcast",
+        event: "enter-name",
+        payload: {
+          user_id: user_id,
+          name: user_name,
+          session_state: global ? global[0] : null,
+        },
+      });
     }
   }
 

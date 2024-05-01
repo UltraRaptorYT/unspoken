@@ -92,6 +92,11 @@ export default function State2({
           }
         }
       }
+      channel?.send({
+        type: "broadcast",
+        event: "enter-attributes",
+        payload: { user_id: user_id, attributes: userBody },
+      });
     }
   }
 
