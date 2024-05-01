@@ -354,39 +354,57 @@ function Host() {
     <div className="h-full relative min-w-[300px] w-full max-w-[1200px] mx-auto flex justify-center items-center my-auto flex-col gap-8 overflow-hidden">
       <div className="h-full w-full flex grow">
         <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
-          {sessionData?.session_data[sessionData.user1_id] &&
-            addLength(
-              (sessionData as SessionDataType)?.session_data[
-                sessionData.user1_id
-              ].split("|")
-            ).map((e, idx) => {
-              return (
-                <AttributeBox
-                  attribute={e}
-                  idx={idx}
-                  key={"attribute_user1_" + idx}
-                />
-              );
-            })}
+          {sessionData?.session_data[sessionData.user1_id]
+            ? addLength(
+                (sessionData as SessionDataType)?.session_data[
+                  sessionData.user1_id
+                ].split("|")
+              ).map((e, idx) => {
+                return (
+                  <AttributeBox
+                    attribute={e}
+                    idx={idx}
+                    key={"attribute_user1_" + idx}
+                  />
+                );
+              })
+            : [...new Array(6)].map((_, idx) => {
+                return (
+                  <AttributeBox
+                    attribute={""}
+                    idx={idx}
+                    key={"attribute_user1_" + idx}
+                  />
+                );
+              })}
         </div>
         <div className="p-5 grow min-w-[350px] max-w-[350px]">
           {dynamicChildren}
         </div>
         <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
-          {sessionData?.session_data[sessionData.user2_id] &&
-            addLength(
-              (sessionData as SessionDataType)?.session_data[
-                sessionData.user2_id
-              ].split("|")
-            ).map((e, idx) => {
-              return (
-                <AttributeBox
-                  attribute={e}
-                  idx={idx + 6}
-                  key={"attribute_user2_" + idx}
-                />
-              );
-            })}
+          {sessionData?.session_data[sessionData.user2_id]
+            ? addLength(
+                (sessionData as SessionDataType)?.session_data[
+                  sessionData.user2_id
+                ].split("|")
+              ).map((e, idx) => {
+                return (
+                  <AttributeBox
+                    attribute={e}
+                    idx={idx + 6}
+                    key={"attribute_user2_" + idx}
+                  />
+                );
+              })
+            : [...new Array(6)].map((_, idx) => {
+                return (
+                  <AttributeBox
+                    attribute={""}
+                    idx={idx + 6}
+                    key={"attribute_user2_" + idx}
+                  />
+                );
+              })}
         </div>
       </div>
     </div>
