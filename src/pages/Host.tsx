@@ -413,8 +413,11 @@ function Host() {
     }
   }, []);
 
-  function addLength(arr: string[]) {
-    let newArr = [...arr, ...Array(Math.max(0, 6 - arr.length)).fill("")];
+  function addLength(arr: string[], maxLength: number) {
+    let newArr = [
+      ...arr,
+      ...Array(Math.max(0, maxLength - arr.length)).fill(""),
+    ];
     return newArr;
   }
 
@@ -426,7 +429,8 @@ function Host() {
             ? addLength(
                 (sessionData as SessionDataType)?.session_data[
                   sessionData.user1_id
-                ].split("|")
+                ].split("|"),
+                6
               ).map((e, idx) => {
                 return (
                   <AttributeBox
@@ -454,7 +458,8 @@ function Host() {
             ? addLength(
                 (sessionData as SessionDataType)?.session_data[
                   sessionData.user2_id
-                ].split("|")
+                ].split("|"),
+                6
               ).map((e, idx) => {
                 return (
                   <AttributeBox
