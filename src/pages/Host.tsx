@@ -140,13 +140,12 @@ function Host() {
       // await getQuestion();
       if (currentState === 3) {
         return await getSessionData();
-      } else {
-        return await channel?.send({
-          type: "broadcast",
-          event: "stateChange",
-          payload: { state: currentState },
-        });
       }
+      return await channel?.send({
+        type: "broadcast",
+        event: "stateChange",
+        payload: { state: currentState },
+      });
     }
 
     handleStateChange();
