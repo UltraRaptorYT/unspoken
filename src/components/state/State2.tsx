@@ -2,32 +2,30 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import CustomButton from "@/components/CustomButton";
 import { useState, useEffect } from "react";
 import supabase from "@/lib/supabase";
-import ScaleableInput from "../ScalebleInput";
+import ScalableInput from "../ScalableInput";
 import { toast } from "sonner";
 
 export default function State2({
-  channel,
   user_id,
   question,
   room_id,
+  readyState,
 }: {
   channel: RealtimeChannel | undefined;
   user_id: string;
   question: string;
   room_id: string | undefined;
+  readyState: (ready: boolean) => void;
 }) {
   const [ready, setReady] = useState<boolean>(false);
   let [currentQn, setCurrentQn] = useState<string>("");
   const [attributeArr, setAttributeArr] = useState<string[]>([""]);
 
   useEffect(() => {
-    if (channel) {
-      channel.send({
-        type: "broadcast",
-        event: "ready",
-        payload: { user_id: user_id, state: ready },
-      });
+    async function updateReady() {
+      readyState(ready);
     }
+    updateReady();
   }, [ready]);
 
   async function getOtherUserName() {
@@ -138,14 +136,14 @@ export default function State2({
   return (
     <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow py-8 grow">
       <div className="text-xl">{currentQn}</div>
-      <ScaleableInput
+      <ScalableInput
         disabled={ready}
         maxInput={6}
         attributeArr={attributeArr}
         inputChangeHandler={inputChangeHandler}
         inputRemoveHandler={inputRemoveHandler}
         inputAddHandler={inputAddHandler}
-      ></ScaleableInput>
+      ></ScalableInput>
       <CustomButton
         ready={ready}
         onClick={async () => {

@@ -1,6 +1,6 @@
 import { RealtimeChannel } from "@supabase/supabase-js";
 
-export default function State2({
+export default function State3({
   question,
 }: {
   channel: RealtimeChannel | undefined;

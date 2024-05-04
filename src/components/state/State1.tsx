@@ -6,27 +6,29 @@ import supabase from "@/lib/supabase";
 import { toast } from "sonner";
 
 export default function State1({
-  channel,
   user_id,
   question,
   room_id,
+  readyState,
 }: {
   channel: RealtimeChannel | undefined;
   user_id: string;
   question: string;
   room_id: string | undefined;
+  readyState: (ready: boolean) => void;
 }) {
   const [ready, setReady] = useState<boolean>(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (channel) {
-      channel.send({
-        type: "broadcast",
-        event: "ready",
-        payload: { user_id: user_id, state: ready },
-      });
+    async function updateReady() {
+      readyState(ready);
     }
+    if (inputRef.current) {
+      let inputValue = (inputRef.current as HTMLInputElement).value;
+      addSessionData(inputValue);
+    }
+    updateReady();
   }, [ready]);
 
   async function addSessionData(user_name: string) {
@@ -67,7 +69,6 @@ export default function State1({
     if (inputRef.current) {
       let inputValue = (inputRef.current as HTMLInputElement).value;
       if (inputValue) {
-        addSessionData(inputValue);
         setReady((prevState) => !prevState);
       } else {
         toast.error("Please enter your name");

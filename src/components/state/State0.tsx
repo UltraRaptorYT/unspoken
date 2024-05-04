@@ -3,24 +3,21 @@ import CustomButton from "@/components/CustomButton";
 import { useState, useEffect } from "react";
 
 export default function State0({
-  channel,
-  user_id,
+  readyState,
 }: {
   channel: RealtimeChannel | undefined;
   user_id: string;
   question: string;
   room_id: string | undefined;
+  readyState: (ready: boolean) => void;
 }) {
   const [ready, setReady] = useState<boolean>(false);
 
   useEffect(() => {
-    if (channel) {
-      channel.send({
-        type: "broadcast",
-        event: "ready",
-        payload: { user_id: user_id, state: ready },
-      });
+    async function updateReady() {
+      readyState(ready);
     }
+    updateReady();
   }, [ready]);
 
   return (

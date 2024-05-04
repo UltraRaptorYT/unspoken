@@ -54,6 +54,14 @@ function Room() {
   }
 
   useEffect(() => {
+    function updateReadyState(ready: boolean) {
+      channel?.send({
+        type: "broadcast",
+        event: "ready",
+        payload: { user_id: user_id, state: ready },
+      });
+    }
+
     async function handleStateChange() {
       await getQuestion();
       const generateStateMapping: GenerateStateMapping = () => {
@@ -64,6 +72,7 @@ function Room() {
               user_id={user_id}
               question={question}
               room_id={room_id}
+              readyState={updateReadyState}
             ></State0>
           ),
           1: (
@@ -72,6 +81,7 @@ function Room() {
               user_id={user_id}
               question={"What is your name?"}
               room_id={room_id}
+              readyState={updateReadyState}
             ></State1>
           ),
           2: (
@@ -80,6 +90,7 @@ function Room() {
               user_id={user_id}
               question={"What is your favourite thing(s) about <PERSON>?"}
               room_id={room_id}
+              readyState={updateReadyState}
             ></State2>
           ),
           3: (
