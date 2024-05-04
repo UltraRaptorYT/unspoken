@@ -6,6 +6,7 @@ import supabase from "@/lib/supabase";
 import { toast } from "sonner";
 
 export default function State1({
+  channel,
   user_id,
   question,
   room_id,
@@ -42,6 +43,7 @@ export default function State1({
         return console.log(error);
       }
       let currentSession = data ? data[0] : null;
+      console.log("session", currentSession);
       if (currentSession) {
         console.log(currentSession);
         if (user_id == currentSession.user1_id) {
@@ -61,14 +63,24 @@ export default function State1({
             return console.log(error);
           }
         }
+      } else {
+        // TODO add a new session
       }
     }
   }
 
   async function checkInput() {
     if (inputRef.current) {
-      let inputValue = (inputRef.current as HTMLInputElement).value;
+      let inputValue = (inputRef.current as HTMLInputElement).value.trim();
       if (inputValue) {
+        console.log(channel);
+        if (channel) {
+          channel.send({
+            type: "broadcast",
+            event: "update-name",
+            payload: { user_id: user_id, name: inputValue },
+          });
+        }
         setReady((prevState) => !prevState);
       } else {
         toast.error("Please enter your name");

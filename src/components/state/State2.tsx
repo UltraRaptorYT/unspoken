@@ -6,6 +6,7 @@ import ScalableInput from "../ScalableInput";
 import { toast } from "sonner";
 
 export default function State2({
+  channel,
   user_id,
   question,
   room_id,
@@ -27,6 +28,17 @@ export default function State2({
     }
     updateReady();
   }, [ready]);
+
+  useEffect(() => {
+    console.log(channel);
+    if (channel) {
+      channel.send({
+        type: "broadcast",
+        event: "update-name",
+        payload: { user_id: user_id, attributes: attributeArr },
+      });
+    }
+  }, [ready, attributeArr]);
 
   async function getOtherUserName() {
     if (room_id) {
@@ -134,7 +146,7 @@ export default function State2({
   }
 
   return (
-    <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow py-8 grow">
+    <div className="flex flex-col max-w-[300px] mx-auto h-full items-center justify-center gap-5 px-3 py-8 grow">
       <div className="text-xl">{currentQn}</div>
       <ScalableInput
         disabled={ready}

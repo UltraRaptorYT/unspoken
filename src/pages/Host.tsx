@@ -323,15 +323,84 @@ function Host() {
           setCurrentState(0);
         });
 
-      channel.on("broadcast", { event: "ready" }, ({ payload }) => {
-        console.log(payload);
-        setReadyState((prevState) => {
-          const newState = { ...prevState };
-          newState[payload.user_id] = payload.state;
-          console.log("new", newState);
-          return newState;
+      channel
+        .on("broadcast", { event: "ready" }, ({ payload }) => {
+          console.log(payload);
+          setReadyState((prevState) => {
+            const newState = { ...prevState };
+            newState[payload.user_id] = payload.state;
+            console.log("new", newState);
+            return newState;
+          });
+        })
+        .on("broadcast", { event: "update-name" }, async ({ payload }) => {
+          console.log(payload);
+          const { data, error } = await supabase
+            .from("unspoken_session")
+            .select()
+            .eq("room_id", room_id)
+            .order("created_at", { ascending: false });
+          if (error) {
+            return console.log(error);
+          }
+          let currentSession = data ? data[0] : null;
+          if (currentSession) {
+            console.log(currentSession);
+            if (payload.user_id == currentSession.user1_id) {
+              const { error } = await supabase
+                .from("unspoken_session")
+                .update({ user1_name: payload.name })
+                .eq("session_id", currentSession.session_id);
+              if (error) {
+                return console.log(error);
+              }
+            } else if (payload.user_id == currentSession.user2_id) {
+              const { error } = await supabase
+                .from("unspoken_session")
+                .update({ user2_name: payload.name })
+                .eq("session_id", currentSession.session_id);
+              if (error) {
+                return console.log(error);
+              }
+            }
+          }
+        })
+        .on("broadcast", { event: "update-attribute" }, async ({ payload }) => {
+          console.log(payload);
+          const { data, error } = await supabase
+            .from("unspoken_session")
+            .select()
+            .eq("room_id", room_id)
+            .order("created_at", { ascending: false });
+          if (error) {
+            return console.log(error);
+          }
+          let currentSession = data ? data[0] : null;
+          if (currentSession) {
+            console.log(currentSession);
+            let updateValue: { [key: string]: string } =
+              currentSession.session_data;
+            if (payload.user_id == currentSession.user1_id) {
+              updateValue[currentSession.user2_id] = payload.attributes;
+              const { error } = await supabase
+                .from("unspoken_session")
+                .update({ session_data: updateValue })
+                .eq("session_id", currentSession.session_id);
+              if (error) {
+                return console.log(error);
+              }
+            } else if (payload.user_id == currentSession.user2_id) {
+              updateValue[currentSession.user1_id] = payload.attributes;
+              const { error } = await supabase
+                .from("unspoken_session")
+                .update({ session_data: updateValue })
+                .eq("session_id", currentSession.session_id);
+              if (error) {
+                return console.log(error);
+              }
+            }
+          }
         });
-      });
 
       channel.subscribe();
       setChannel(channel);
