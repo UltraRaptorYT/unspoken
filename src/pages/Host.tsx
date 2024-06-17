@@ -413,13 +413,13 @@ function Host() {
     }
   }, []);
 
-  function addLength(arr: string[], maxLength: number) {
-    let newArr = [
-      ...arr,
-      ...Array(Math.max(0, maxLength - arr.length)).fill(""),
-    ];
-    return newArr;
-  }
+  // function addLength(arr: string[], maxLength: number) {
+  //   let newArr = [
+  //     ...arr,
+  //     ...Array(Math.max(0, maxLength - arr.length)).fill(""),
+  //   ];
+  //   return newArr;
+  // }
 
   return (
     <div className="h-full relative min-w-[300px] w-full max-w-[1200px] mx-auto flex justify-center items-center my-auto flex-col gap-8 overflow-hidden">

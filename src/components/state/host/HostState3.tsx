@@ -420,11 +420,11 @@ export default function HostState3({
           data.path,
       },
     });
-    // setImgURL(
-    //   import.meta.env.VITE_SUPABASE_URL +
-    //     "/storage/v1/object/public/unspoken_image/" +
-    //     data.path
-    // );
+    setImgURL(
+      import.meta.env.VITE_SUPABASE_URL +
+        "/storage/v1/object/public/unspoken_image/" +
+        data.path
+    );
     setIsPlay2(true);
     setLoading(false);
   }
