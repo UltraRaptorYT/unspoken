@@ -98,6 +98,7 @@ export default function HostState3({
   //  && textState == textMapString.length - 1
 
   useEffect(() => {
+    console.log("test", sessionData);
     if (sessionData) {
       setUser1(sessionData.user1_name);
       setUser2(sessionData.user2_name);
@@ -173,14 +174,15 @@ export default function HostState3({
           {/* <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
             {sessionData?.session_data[sessionData.user1_id] &&
               sessionData?.session_data[sessionData.user1_id]
-                .split(",")
+                .split("|")
                 .map((e, idx) => {
                   return (
-                    <AttributeBox
-                      attribute={e}
-                      idx={idx}
-                      key={"attribute_user1_" + idx}
-                    />
+                    <div key={"attribute_user1_" + idx}>{e}</div>
+                    // <AttributeBox
+                    //   attribute={e}
+                    //   idx={idx}
+                    //   key={"attribute_user1_" + idx}
+                    // />
                   );
                 })}
           </div> */}
@@ -199,14 +201,15 @@ export default function HostState3({
           {/* <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
             {sessionData?.session_data[sessionData.user2_id] &&
               sessionData?.session_data[sessionData.user2_id]
-                .split(",")
+                .split("|")
                 .map((e, idx) => {
                   return (
-                    <AttributeBox
-                      attribute={e}
-                      idx={idx}
-                      key={"attribute_user2_" + idx}
-                    />
+                    <div key={"attribute_user2_" + idx}>{e}</div>
+                    // <AttributeBox
+                    //   attribute={e}
+                    //   idx={idx}
+                    //   key={"attribute_user2_" + idx}
+                    // />
                   );
                 })}
           </div> */}
@@ -417,11 +420,11 @@ export default function HostState3({
           data.path,
       },
     });
-    setImgURL(
-      import.meta.env.VITE_SUPABASE_URL +
-        "/storage/v1/object/public/unspoken_image/" +
-        data.path
-    );
+    // setImgURL(
+    //   import.meta.env.VITE_SUPABASE_URL +
+    //     "/storage/v1/object/public/unspoken_image/" +
+    //     data.path
+    // );
     setIsPlay2(true);
     setLoading(false);
   }
