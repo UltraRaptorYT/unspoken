@@ -151,6 +151,9 @@ function Host() {
     handleStateChange();
     if (currentState === 3) {
       getSessionData();
+      setTimeout(() => {
+        getSessionData();
+      }, 3000);
     } else {
       setSessionData(BASE);
     }
