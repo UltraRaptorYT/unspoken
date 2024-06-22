@@ -435,7 +435,9 @@ function Host() {
                   return (
                     e && (
                       <>
-                        <li key={"attribute_user2_" + idx}>{e}</li>
+                        <li key={"attribute_user1_" + idx} className="text-xl">
+                          {e}
+                        </li>
                       </>
                     )
                   );
@@ -486,7 +488,9 @@ function Host() {
                   return (
                     e && (
                       <>
-                        <li key={"attribute_user2_" + idx}>{e}</li>
+                        <li key={"attribute_user2_" + idx} className="text-xl">
+                          {e}
+                        </li>
                       </>
                     )
                   );
