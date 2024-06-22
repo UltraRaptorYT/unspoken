@@ -5,7 +5,6 @@ import HostState2 from "@/components/state/host/HostState2";
 import HostState3 from "@/components/state/host/HostState3";
 import { ReadyState, StateMappingType } from "@/types";
 import { Button } from "@/components/ui/button";
-import AttributeBox from "@/components/AttributeBox";
 import { useAtom } from "jotai";
 import { session_data, BASE } from "@/pages/Host";
 
@@ -92,36 +91,40 @@ function FakeHost() {
   return (
     <div className="h-full relative min-w-[300px] w-full max-w-[1200px] mx-auto flex justify-center items-center my-auto flex-col gap-8 overflow-hidden">
       <div className="h-full w-full flex grow">
-        <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
-          {sessionData?.session_data[sessionData.user1_id] &&
-            sessionData?.session_data[sessionData.user1_id]
-              .split(",")
-              .map((e, idx) => {
-                return (
-                  <AttributeBox
-                    attribute={e}
-                    idx={idx}
-                    key={"attribute_user1_" + idx}
-                  />
-                );
-              })}
+        <div className="w-full h-full flex items-center justify-center">
+          <ul className="list-disc">
+            {sessionData?.session_data[sessionData.user1_id] &&
+              sessionData?.session_data[sessionData.user1_id]
+                .split(",")
+                .map((e, idx) => {
+                  return (
+                    <>
+                      <li key={"attribute_user1_" + idx} className="text-xl">
+                        {e}
+                      </li>
+                    </>
+                  );
+                })}
+          </ul>
         </div>
         <div className="p-5 grow min-w-[350px] max-w-[350px]">
           {dynamicChildren}
         </div>
-        <div className="grid grid-cols-2 w-full items-center justify-center h-fit">
-          {sessionData?.session_data[sessionData.user2_id] &&
-            sessionData?.session_data[sessionData.user2_id]
-              .split(",")
-              .map((e, idx) => {
-                return (
-                  <AttributeBox
-                    attribute={e}
-                    idx={idx + 6}
-                    key={"attribute_user2_" + idx}
-                  />
-                );
-              })}
+        <div className="w-full h-full flex items-center justify-center">
+          <ul className="list-disc">
+            {sessionData?.session_data[sessionData.user2_id] &&
+              sessionData?.session_data[sessionData.user2_id]
+                .split(",")
+                .map((e, idx) => {
+                  return (
+                    <>
+                      <li key={"attribute_user2_" + idx} className="text-xl">
+                        {e}
+                      </li>
+                    </>
+                  );
+                })}
+          </ul>
         </div>
       </div>
       <div className="flex gap-5 absolute top-[75%] -translate-y-1/2 left-1/2 -translate-x-1/2">
